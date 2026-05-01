@@ -324,7 +324,7 @@ def construir() -> Document:
     add_lista(doc, [
         "⭐ Repositorio en GitHub (código abierto, MIT): github.com/leanmasterpymes/gestion_ruta. Clónalo y ejecuta el sistema completo en tu computadora.",
         "Notebook en Google Colab: colab.research.google.com/github/leanmasterpymes/gestion_ruta/blob/main/notebooks/01_ruteo_multinivel.ipynb. El flujo completo paso a paso, sin instalar nada.",
-        "Planificador interactivo: sube un archivo de clientes y obtén el plan diario coordinado entre centros. URL pública pendiente al desplegar.",
+        "👉 Planificador interactivo en Streamlit (sin instalación): https://gestionruta-fvzdvkcjthzfavm9fcmk9c.streamlit.app/. Plan diario con mapa interactivo, métricas del modelo de demanda, comparativa antes/después y descarga del plan en CSV.",
     ])
 
     # ── Sección 1 ───────────────────────────────────────────────────────

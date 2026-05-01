@@ -15,11 +15,9 @@
 
 ## Demo en vivo · sin instalación
 
-> Las URLs públicas se incorporan al desplegar las aplicaciones; mientras tanto, ejecute el repo localmente o abra el notebook en Colab.
-
+- **[Planificador interactivo en Streamlit](https://gestionruta-fvzdvkcjthzfavm9fcmk9c.streamlit.app/):** plan diario coordinado entre centros de distribución, con mapa interactivo, métricas del modelo de demanda, comparativa antes / después y descarga del plan en CSV.
 - **⭐ Repositorio (código abierto · MIT):** clónelo y ejecute el stack en su computadora.
-- **Planificador de rutas (Streamlit):** subir un CSV de clientes y obtener el plan diario coordinado entre sucursales — *URL pública pendiente*.
-- **Notebook ejecutable en Colab:** algoritmo paso a paso, ideal para estudiantes de Investigación de Operaciones — usa el badge "Open in Colab" de arriba.
+- **Notebook ejecutable en Colab:** algoritmo paso a paso, usa el badge "Open in Colab" de arriba.
 
 ---
 
