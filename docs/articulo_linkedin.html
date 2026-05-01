@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gestión de rutas multi-sucursal con Machine Learning y programación dinámica</title>
+<meta name="description" content="Arquitectura abierta y reproducible para que cualquier distribuidora deje de planificar rutas como islas y empiece a operar un plan diario coordinado entre sus centros de distribución.">
+<style>
+  :root {
+    --color-primary: #1A4373;
+    --color-primary-dark: #0F2D52;
+    --color-primary-soft: #E5EFFA;
+    --color-accent: #D96F00;
+    --color-accent-soft: #FFF1DC;
+    --color-success: #1F6B33;
+    --color-success-soft: #DEF0E3;
+    --color-text: #0F1729;
+    --color-text-strong: #1A2233;
+    --color-text-soft: #2D3748;
+    --color-muted: #4F5B6F;
+    --color-border: #D7DEE8;
+    --color-bg: #F6F8FB;
+    --color-card: #FFFFFF;
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+    --shadow-md: 0 6px 16px rgba(15, 23, 42, 0.08);
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--color-bg); color: var(--color-text);
+    line-height: 1.78; font-size: 17px; margin: 0; padding: 0;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    hyphens: auto; word-break: normal;
+  }
+  .container { max-width: 820px; margin: 0 auto; padding: 0 24px; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+    color: #FFFFFF; padding: 72px 0 56px; margin-bottom: 32px;
+  }
+  .hero h1 {
+    font-size: 36px; line-height: 1.2; margin: 0 0 18px;
+    font-weight: 800; letter-spacing: -0.02em; color: #FFFFFF;
+  }
+  .hero .subtitle {
+    font-size: 19px; line-height: 1.6; color: #E8EEF7;
+    font-weight: 400; margin: 0 0 24px; text-align: justify;
+  }
+  .hero .meta-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+  .chip {
+    background: rgba(255, 255, 255, 0.20); border: 1px solid rgba(255, 255, 255, 0.32);
+    padding: 7px 14px; border-radius: 999px;
+    font-size: 13px; font-weight: 600; color: #FFFFFF;
+  }
+
+  /* TOC */
+  .toc {
+    background: var(--color-card); border: 1px solid var(--color-border);
+    border-radius: var(--radius); padding: 22px 26px; margin: 32px 0;
+    box-shadow: var(--shadow-sm);
+  }
+  .toc h2 {
+    font-size: 12px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--color-muted);
+    margin: 0 0 12px; border: none;
+  }
+  .toc ol { margin: 0; padding-left: 22px; columns: 2; column-gap: 32px; }
+  .toc li { margin: 5px 0; break-inside: avoid; }
+  .toc a { color: var(--color-primary); text-decoration: none; font-weight: 600; }
+  .toc a:hover { text-decoration: underline; }
+
+  /* DEMOS */
+  .demos {
+    background: var(--color-primary-soft); border: 1px solid #C5D8EC;
+    border-radius: var(--radius); padding: 24px 28px; margin: 24px 0 40px;
+  }
+  .demos h2 {
+    margin-top: 0; border: none; color: var(--color-primary-dark);
+    font-size: 20px; font-weight: 700;
+  }
+  .demos p { text-align: left; }
+  .demos ul { margin: 12px 0 0; padding-left: 22px; }
+  .demos li { margin: 8px 0; color: var(--color-text-strong); text-align: left; }
+
+  /* SECTIONS */
+  section.card {
+    background: var(--color-card); border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg); padding: 40px 44px; margin: 28px 0;
+    box-shadow: var(--shadow-sm);
+  }
+  section.card h2 {
+    display: flex; align-items: baseline; gap: 14px;
+    font-size: 24px; margin: 0 0 20px; border: none; padding: 0;
+    line-height: 1.3; color: var(--color-text-strong); font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+  .section-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; background: var(--color-primary);
+    color: #FFFFFF; border-radius: 50%;
+    font-size: 15px; font-weight: 800; flex-shrink: 0;
+  }
+  section.card h3 {
+    font-size: 17px; margin: 26px 0 10px;
+    color: var(--color-primary-dark); font-weight: 700;
+  }
+  section.card p {
+    margin: 14px 0; color: var(--color-text-soft);
+    text-align: justify; hyphens: auto;
+  }
+  section.card li {
+    margin: 10px 0; color: var(--color-text-soft);
+    text-align: justify; hyphens: auto;
+  }
+  section.card p strong, section.card li strong {
+    color: var(--color-text-strong); font-weight: 700;
+  }
+
+  /* CALLOUTS */
+  .callout {
+    background: var(--color-accent-soft); border-left: 4px solid var(--color-accent);
+    padding: 18px 24px; margin: 24px 0; border-radius: 0 8px 8px 0;
+    color: var(--color-text-strong); text-align: justify;
+  }
+  .callout strong { color: var(--color-text); }
+  .callout-info {
+    background: var(--color-primary-soft); border-left: 4px solid var(--color-primary);
+    padding: 18px 24px; margin: 24px 0; border-radius: 0 8px 8px 0;
+    color: var(--color-text-strong); text-align: justify;
+  }
+
+  /* MÉTRICAS */
+  .metric-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px; margin: 24px 0;
+  }
+  .metric {
+    background: var(--color-success-soft); padding: 20px 22px;
+    border-radius: 10px; border: 1px solid #B8D9C0;
+  }
+  .metric .num {
+    font-size: 28px; font-weight: 800;
+    color: var(--color-success); line-height: 1.05;
+  }
+  .metric .lbl {
+    font-size: 13px; color: var(--color-text-strong);
+    font-weight: 600; margin-top: 6px; line-height: 1.4;
+  }
+
+  /* BENEFICIOS — bloques narrativos */
+  .beneficios { display: grid; gap: 16px; margin: 24px 0; }
+  .beneficio {
+    background: var(--color-card); border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-success);
+    border-radius: 8px; padding: 18px 22px;
+  }
+  .beneficio .titulo {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 6px;
+  }
+  .beneficio .pct {
+    background: var(--color-success-soft); color: var(--color-success);
+    padding: 4px 12px; border-radius: 999px;
+    font-size: 14px; font-weight: 800; letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+  .beneficio .label {
+    font-size: 16px; font-weight: 700; color: var(--color-text-strong);
+  }
+  .beneficio .desc {
+    font-size: 15px; color: var(--color-text-soft); margin: 4px 0 0;
+    text-align: justify; line-height: 1.6;
+  }
+
+  /* PULL QUOTE */
+  blockquote.pull {
+    border-left: 4px solid var(--color-primary); background: var(--color-primary-soft);
+    margin: 26px 0; padding: 20px 26px; font-size: 18px;
+    font-style: italic; color: var(--color-text-strong); border-radius: 0 8px 8px 0;
+    text-align: left;
+  }
+
+  /* TABLES */
+  table {
+    border-collapse: separate; border-spacing: 0; width: 100%; margin: 22px 0;
+    font-size: 15px; background: white; border-radius: 10px;
+    overflow: hidden; box-shadow: var(--shadow-sm);
+  }
+  th { background: var(--color-primary); color: white; padding: 14px 18px;
+       text-align: left; font-weight: 700; font-size: 14px; }
+  td { padding: 14px 18px; border-top: 1px solid var(--color-border);
+       vertical-align: top; color: var(--color-text-strong); text-align: left; }
+  tr:nth-child(even) td { background: #F8FAFD; }
+
+  /* FIGURES */
+  figure { margin: 26px 0; }
+  img { max-width: 100%; height: auto; display: block; margin: 0 auto;
+        border-radius: 8px; box-shadow: var(--shadow-md); }
+  figcaption {
+    font-size: 13px; color: var(--color-muted); text-align: center;
+    margin-top: 12px; font-style: italic;
+  }
+
+  /* TECH-DEEP */
+  .tech-deep {
+    background: var(--color-card); border: 2px solid var(--color-primary);
+    border-radius: var(--radius-lg); padding: 30px 34px; margin: 36px 0;
+  }
+  .tech-deep h2 {
+    display: flex; align-items: center; gap: 14px;
+    font-size: 21px; color: var(--color-primary-dark);
+    margin: 0 0 14px; border: none; padding: 0; font-weight: 800;
+  }
+  .tech-deep .icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; background: var(--color-primary-soft);
+    border-radius: 50%; font-size: 19px;
+  }
+  .tech-deep p { color: var(--color-text-strong); text-align: justify; }
+  .tech-deep ul { margin: 12px 0; padding-left: 22px; }
+  .tech-deep li {
+    color: var(--color-text-strong); margin: 8px 0;
+    text-align: justify; hyphens: auto;
+  }
+  .tech-deep a { color: var(--color-primary); font-weight: 700; }
+
+  /* CTA CARD */
+  .cta-card {
+    background: linear-gradient(135deg, var(--color-accent) 0%, #F08B1C 100%);
+    color: #FFFFFF; padding: 38px 42px; border-radius: var(--radius-lg);
+    margin: 36px 0; box-shadow: var(--shadow-md);
+  }
+  .cta-card h2 { color: #FFFFFF; border: none; margin: 0 0 16px; font-size: 22px; }
+  .cta-card p { color: #FFFFFF; margin: 12px 0; text-align: left; }
+  .cta-card a { color: #FFFFFF; text-decoration: underline; font-weight: 700; }
+
+  /* AUTHOR CARD */
+  .author-card {
+    background: var(--color-card); border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg); padding: 28px 32px; margin: 32px 0;
+    box-shadow: var(--shadow-sm);
+  }
+  .author-card .name {
+    font-size: 19px; font-weight: 800; color: var(--color-text-strong);
+    margin-bottom: 6px;
+  }
+  .author-card .role {
+    font-size: 14px; color: var(--color-text-soft); margin: 6px 0;
+    text-align: justify; line-height: 1.6;
+  }
+  .author-card .credentials {
+    font-size: 13px; color: var(--color-muted);
+    text-align: justify; line-height: 1.7;
+  }
+
+  hr { border: none; border-top: 1px solid var(--color-border); margin: 32px 0; }
+
+  @media (max-width: 720px) {
+    .hero { padding: 48px 0 38px; }
+    .hero h1 { font-size: 28px; }
+    .hero .subtitle { font-size: 17px; }
+    section.card { padding: 28px 22px; }
+    .toc ol { columns: 1; }
+    section.card p, section.card li { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <h1>Gestión de rutas multi-sucursal con Machine Learning y programación dinámica</h1>
+    <p class="subtitle">Una arquitectura abierta, reproducible y de bajo costo para que cualquier distribuidora con varios centros de distribución deje de planificar rutas como islas y empiece a operar un plan diario coordinado.</p>
+    <div class="meta-chips">
+      <span class="chip">Lectura · 7–9 min</span>
+      <span class="chip">Open source · MIT</span>
+      <span class="chip">PYMES · Logística</span>
+      <span class="chip">Caso de estudio reproducible</span>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <nav class="toc">
+    <h2>En este artículo</h2>
+    <ol>
+      <li><a href="#problema">El problema operativo</a></li>
+      <li><a href="#arquitectura">La arquitectura propuesta</a></li>
+      <li><a href="#prediccion">Predecir antes de planificar</a></li>
+      <li><a href="#optimizacion">Cómo se optimiza la ruta</a></li>
+      <li><a href="#coordinacion">Coordinación entre centros</a></li>
+      <li><a href="#validacion">Validación contra el estándar industrial</a></li>
+      <li><a href="#beneficios">Cinco beneficios operativos medibles</a></li>
+      <li><a href="#probar">Cómo probar el sistema</a></li>
+    </ol>
+  </nav>
+
+  <div class="demos">
+    <h2>Demo y código sin instalación</h2>
+    <p>Antes de leer, abre el sistema funcionando en tu navegador:</p>
+    <ul>
+      <li><strong>⭐ <a href="https://github.com/leanmasterpymes/gestion_ruta">Repositorio en GitHub (código abierto, MIT)</a></strong>: clónalo y ejecuta el sistema completo en tu computadora.</li>
+      <li><strong><a href="https://colab.research.google.com/github/leanmasterpymes/gestion_ruta/blob/main/notebooks/01_ruteo_multinivel.ipynb">Notebook en Google Colab</a></strong>: el flujo completo paso a paso, sin instalar nada.</li>
+      <li><strong>Planificador interactivo</strong>: sube un archivo de clientes y obtén el plan diario coordinado entre centros. <em>URL pública pendiente al desplegar.</em></li>
+    </ul>
+  </div>
+
+  <section class="card" id="problema">
+    <h2><span class="section-num">1</span> El problema operativo que se repite en la mayoría de las distribuidoras</h2>
+
+    <p>En la mayoría de las distribuidoras con varios centros de distribución que he visitado (sucursales, depósitos regionales o incluso fábricas), dos camiones de la misma empresa terminan a tres cuadras del mismo cliente el mismo día. Cada centro planifica su ruta como una isla: arma su propia plantilla, reparte sus pedidos, y nadie se entera de que el centro vecino está pasando por la misma calle dos horas después. El resultado se paga en silencio: kilómetros duplicados, combustible perdido, horas extra del chofer y el clásico camión flash subcontratado a última hora cuando la demanda real superó la capacidad asignada.</p>
+
+    <p>El patrón suele ser el mismo:</p>
+
+    <ul>
+      <li>Cada centro estima su demanda <em>al ojo</em> sobre el promedio de las últimas semanas, sin un modelo que capture estacionalidad ni tendencia.</li>
+      <li>La asignación cliente–centro se hereda desde hace años y nadie la cuestiona, aun cuando dos centros hayan crecido en zonas que ya se solapan.</li>
+      <li>Cuando el plan del día queda corto, se subcontrata un camión flash con un costo 30 a 50% superior al de un camión propio. Nadie mide cuánto se va al año por este renglón.</li>
+      <li>Cuando el plan queda holgado, los choferes regresan a la rampa con espacio vacío y se justifican horas que no se trabajaron en ruta. La utilización real de la flota nunca aparece en el reporte mensual.</li>
+    </ul>
+
+    <div class="callout">
+      Para responder a esta situación desarrollé un sistema de código abierto, disponible en GitHub: <a href="https://github.com/leanmasterpymes/gestion_ruta"><strong>github.com/leanmasterpymes/gestion_ruta</strong></a>, que aborda el problema desde la predicción de demanda hasta el plan diario coordinado entre los centros de distribución.
+    </div>
+  </section>
+
+  <section class="card" id="arquitectura">
+    <h2><span class="section-num">2</span> La arquitectura propuesta</h2>
+
+    <p>La solución se compone de cuatro capas, todas basadas en software libre y reproducibles desde el repositorio. El sistema toma <strong>dos insumos principales</strong>: el histórico de pedidos de los clientes y la disponibilidad de cada centro de distribución (cantidad de camiones y capacidad de cada uno). Conocer la disponibilidad antes de asignar es lo que permite respetar la capacidad real de despacho de cada centro y evitar la sobrecarga.</p>
+
+    <figure>
+      <img src="../figuras/diagramas/arquitectura_sistema.png" alt="Pipeline del sistema con dos inputs (histórico de pedidos y disponibilidad por centro) que alimentan la predicción de demanda, el clustering de clientes, la programación dinámica, el plan de rutas coordinado y el dashboard.">
+      <figcaption>De los datos al plan diario, pipeline end-to-end de la solución.</figcaption>
+    </figure>
+
+    <ol>
+      <li><strong>Predicción de demanda por cliente</strong>: un modelo aprende los patrones de pedido de cada cliente y proyecta cuánto pedirá mañana, capturando estacionalidad semanal, tendencia mensual y comportamiento individual.</li>
+      <li><strong>Clustering inteligente de clientes</strong>: los clientes se agrupan en zonas de ruteo balanceadas por la capacidad real del camión, no por divisiones administrativas heredadas.</li>
+      <li><strong>Optimización de la ruta</strong>: cada zona se resuelve con un algoritmo clásico de optimización que minimiza kilometraje y respeta ventanas horarias.</li>
+      <li><strong>Coordinación entre centros</strong>: antes de salir, el sistema reasigna clientes fronterizos para que dos centros no se pisen el territorio.</li>
+    </ol>
+
+    <p>El resultado es un plan diario donde cada cliente tiene un centro de distribución, una ruta y una posición en la secuencia, con cifras reproducibles a partir de un caso de estudio que cualquiera puede correr en su computadora.</p>
+  </section>
+
+  <section class="card" id="prediccion">
+    <h2><span class="section-num">3</span> Predecir antes de planificar</h2>
+
+    <p>El insumo principal del ruteo es la demanda esperada de cada cliente para el día siguiente. Sin esa predicción, todo el resto del sistema opera con promedios planos que no capturan la realidad: lunes y martes pico, domingo valle, clientes que crecen, clientes que cambian de hábitos.</p>
+
+    <p>El modelo aprende de cuatro tipos de señales:</p>
+
+    <ul>
+      <li>El <strong>calendario</strong> (día de la semana, mes, semana del año), que captura los ciclos predecibles del negocio.</li>
+      <li>El <strong>historial reciente</strong> del cliente (cuánto pidió hace 1, 7 y 14 días), que captura la inercia de pedidos y los hábitos individuales.</li>
+      <li>La <strong>tendencia</strong> (medias móviles de 7 y 30 días), que suaviza ruido y muestra si el cliente está creciendo, estable o decreciendo.</li>
+      <li>El <strong>perfil del cliente</strong> (tipo de comercio, ventana horaria, nivel de demanda base).</li>
+    </ul>
+
+    <h3>Validación rigurosa</h3>
+
+    <p>La validación se hace de forma rigurosa: los últimos 30 días del histórico se reservan como prueba, sin que el modelo los vea durante el aprendizaje. Esto evita la fuga de información típica de los splits aleatorios sobre series de tiempo, donde un modelo puede "ver el futuro" durante el entrenamiento y reportar métricas optimistas que después no se reproducen en producción.</p>
+
+    <p>Sobre el caso de estudio del repositorio (50 clientes, 540 días de histórico), el modelo logra estas métricas en datos que el modelo no usó para aprender:</p>
+
+    <div class="metric-grid">
+      <div class="metric">
+        <div class="num">10.1%</div>
+        <div class="lbl">error en la demanda total<br>esperada por día</div>
+      </div>
+      <div class="metric">
+        <div class="num">11.3</div>
+        <div class="lbl">unidades de error promedio<br>por cliente y día</div>
+      </div>
+      <div class="metric">
+        <div class="num">540</div>
+        <div class="lbl">días de histórico</div>
+      </div>
+      <div class="metric">
+        <div class="num">50</div>
+        <div class="lbl">clientes en el caso</div>
+      </div>
+    </div>
+
+    <p>La métrica que más importa para la planificación de capacidad es el <strong>error sobre la demanda agregada por día</strong>: si la flota total va a recibir alrededor de 870 unidades en pedidos para mañana, el modelo se equivoca en promedio un 10% (cerca de 87 unidades arriba o abajo). Ese rango de error es suficiente para dimensionar correctamente cuántos camiones cargar y permite anticipar días pico antes de que aparezca la sobrecarga.</p>
+
+    <figure>
+      <img src="../figuras/imagenes/mapa_clientes_clusters.png" alt="Mapa de los 50 clientes coloreados por centro de distribución asignado, con los 5 centros marcados como cuadrados.">
+      <figcaption>Distribución geográfica de los clientes con su centro asignado por el sistema.</figcaption>
+    </figure>
+  </section>
+
+  <section class="card" id="optimizacion">
+    <h2><span class="section-num">4</span> Cómo se optimiza la ruta</h2>
+
+    <p>La optimización de rutas se apoya en una idea de los años sesenta que sigue siendo el corazón de los mejores sistemas industriales: descomponer un problema grande en piezas pequeñas, resolver cada pieza una sola vez y reutilizar el resultado. La técnica se llama <strong>programación dinámica</strong>, y el algoritmo clásico que la materializa para el ruteo es <strong>Held-Karp (1962)</strong>.</p>
+
+    <blockquote class="pull">
+      "¿Cuál es el camino más corto para visitar este conjunto de clientes y volver al centro de distribución?". Esa es la pregunta. La programación dinámica la responde sin probar todas las combinaciones posibles.
+    </blockquote>
+
+    <p>El método tiene un límite práctico: cuando una ruta crece de 15 clientes en adelante, el cálculo se vuelve demasiado pesado. La estrategia del sistema es respetar ese límite y usar <strong>descomposición por zonas</strong>: el clustering reduce 50 clientes a varias rutas pequeñas, cada una con menos de 15 clientes, donde el algoritmo exacto resuelve el óptimo en milisegundos. Cuando una zona excede los 15 clientes, se sustituye automáticamente por una variante aproximada que sigue siendo óptima en la práctica.</p>
+
+    <p>El resultado, en cifras del propio sistema, es contundente: un plan completo de 50 clientes y 5 centros de distribución se calcula en <strong>menos de 10 milisegundos</strong>.</p>
+  </section>
+
+  <section class="card" id="coordinacion">
+    <h2><span class="section-num">5</span> Coordinación entre centros, el verdadero cambio de paradigma</h2>
+
+    <p>El gran cambio que introduce esta arquitectura no es el algoritmo de optimización en sí, sino el paso previo de <strong>asignar clientes a centros de distribución con visión global</strong>. La asignación tradicional, que es la que opera hoy en la mayoría de las distribuidoras, asigna cada cliente al centro más cercano y termina ahí. Funciona razonablemente bien cuando la red es pequeña, pero cuando crece, dos centros empiezan a invadirse el territorio.</p>
+
+    <p>La asignación coordinada plantea el problema desde otro lugar: cada centro tiene una capacidad real (cantidad de camiones multiplicada por la capacidad de cada camión), y cada cliente debe asignarse de modo que se minimice la distancia total respetando esa capacidad. El sistema resuelve este planteo en milisegundos y elimina los solapamientos sin necesidad de redibujar zonas a mano.</p>
+
+    <figure>
+      <img src="../figuras/imagenes/plan_rutas_resuelto.png" alt="Mapa con las rutas finales resueltas, líneas coloreadas saliendo de cada centro de distribución hacia sus clientes en secuencia óptima.">
+      <figcaption>Plan de rutas resuelto, cada color representa un centro de distribución con sus rutas coordinadas.</figcaption>
+    </figure>
+  </section>
+
+  <section class="card" id="validacion">
+    <h2><span class="section-num">6</span> Validación contra el estándar industrial</h2>
+
+    <p>Para validar la calidad del sistema, el motor propio se compara lado a lado con <strong>Google OR-Tools</strong>, el estándar industrial de problemas de ruteo. Sobre el mismo caso de estudio:</p>
+
+    <table>
+      <thead>
+        <tr><th>Caso</th><th>Sistema propio</th><th>OR-Tools</th><th>Diferencia</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Ruta única, 12 clientes</td><td>154.06 km</td><td>154.06 km</td><td><strong>0.0%</strong>, 50× más rápido</td></tr>
+        <tr><td>Plan completo, 50 clientes y 5 centros</td><td>334.66 km</td><td>289.31 km</td><td><strong>+15.7%</strong> bajo restricción real</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout-info">
+      En el caso pequeño, el sistema propio encuentra el óptimo idéntico al estándar industrial, 50 veces más rápido. En el caso grande, OR-Tools logra menor kilometraje porque consolida toda la flota en un único depósito ficticio (un esquema irrealizable en la operación real, donde cada camión sale de su centro de origen y debe regresar a él al cierre del turno). Bajo la misma restricción operativa, el sistema propio queda dentro de un margen razonable del óptimo industrial.
+    </div>
+  </section>
+
+  <section class="card" id="beneficios">
+    <h2><span class="section-num">7</span> Cinco beneficios operativos medibles</h2>
+
+    <p>Las cifras siguientes corresponden a referencias públicas del sector (Gartner, McKinsey, Project44, FarEye, ORTEC, OptimoRoute) cuando una arquitectura de planificación con predicción de demanda y ruteo automatizado se implementa con disciplina. No son promesas: son rangos documentados de mejora, con su traducción directa al impacto en el negocio.</p>
+
+    <div class="beneficios">
+      <div class="beneficio">
+        <div class="titulo">
+          <span class="pct">15 a 30% menos</span>
+          <span class="label">kilometraje total</span>
+        </div>
+        <p class="desc">Menos combustible, menos desgaste de flota, menos peajes y menos tiempo improductivo en ruta. Si una distribuidora corre 50.000 km al mes, esto se traduce en un ahorro de 7.500 a 15.000 km mensuales.</p>
+      </div>
+
+      <div class="beneficio">
+        <div class="titulo">
+          <span class="pct">15 a 25% más</span>
+          <span class="label">clientes por ruta</span>
+        </div>
+        <p class="desc">Mayor productividad por chofer y por camión. Si hoy un camión visita 20 clientes al día, puede llegar a 23 o 25 con el mismo recurso. Cuando la red crece, no es necesario contratar más camiones de inmediato.</p>
+      </div>
+
+      <div class="beneficio">
+        <div class="titulo">
+          <span class="pct">20 a 25% menos</span>
+          <span class="label">costo de combustible</span>
+        </div>
+        <p class="desc">Ahorro directo en el renglón más visible del estado de resultados de logística. Si el combustible representa entre 25 y 30% del costo logístico total, esto se traduce en una reducción de 5 a 7% en el costo logístico total.</p>
+      </div>
+
+      <div class="beneficio">
+        <div class="titulo">
+          <span class="pct">10 a 20% menos</span>
+          <span class="label">horas extra del chofer</span>
+        </div>
+        <p class="desc">Menos pago de horas extra, menor rotación de personal y menor riesgo laboral. El chofer fatigado tiene entre 2 y 3 veces más probabilidad de accidente; estabilizar la jornada protege a la operación y al negocio.</p>
+      </div>
+
+      <div class="beneficio">
+        <div class="titulo">
+          <span class="pct">30 a 60% menos</span>
+          <span class="label">subcontrataciones flash</span>
+        </div>
+        <p class="desc">El ahorro más subestimado de toda la arquitectura. Un camión flash subcontratado cuesta entre 30 y 50% más que un camión propio. Si hoy 10% de las rutas se cubren con flash y se baja a 4 o 5%, ese es ahorro puro al cierre del mes, mes tras mes.</p>
+      </div>
+    </div>
+
+    <figure>
+      <img src="../figuras/imagenes/antes_despues.png" alt="Comparativa antes y después en tres barras: kilometraje total, número de rutas y costo estimado.">
+      <figcaption>Comparativa antes y después, planificación coordinada con predicción y optimización.</figcaption>
+    </figure>
+  </section>
+
+  <section class="card" id="probar">
+    <h2><span class="section-num">8</span> Cómo probar el sistema</h2>
+
+    <h3>Opción rápida, sin instalar nada</h3>
+    <p>Hace clic en el badge "Open in Colab" del repositorio. Las celdas ejecutan en orden el flujo completo: caso de estudio, predicción, clustering, optimización, validación contra el estándar industrial y mapa del plan resuelto. En menos de dos minutos, la solución está corriendo en una pestaña del navegador.</p>
+
+    <h3>Opción para implementarlo, clonar el repositorio</h3>
+    <p>🔗 <strong>El código completo está publicado bajo licencia MIT en <a href="https://github.com/leanmasterpymes/gestion_ruta">github.com/leanmasterpymes/gestion_ruta</a>.</strong> Cualquiera puede clonarlo, correr el sistema en su computadora y conectar sus propios datos de clientes. El planificador abre en el navegador y permite cargar un archivo de clientes propio para generar un plan personalizado.</p>
+  </section>
+
+  <div class="tech-deep">
+    <h2><span class="icon">🔬</span> ¿Querés profundizar en el detalle técnico?</h2>
+    <p>Para profesionales técnicos, estudiantes de Investigación de Operaciones y desarrolladores que quieran entender el sistema por dentro, el repositorio incluye una <strong>versión extendida del artículo</strong> y un <strong>notebook ejecutable paso a paso</strong> con:</p>
+    <ul>
+      <li>La formulación matemática del subproblema y la ecuación de Bellman aplicada al ruteo.</li>
+      <li>La tabla de complejidad teórica y el momento exacto en que cada enfoque deja de ser viable.</li>
+      <li>El código fuente completo de los siete módulos del motor.</li>
+      <li>El benchmark detallado contra Google OR-Tools, con tiempos de cómputo y gap de optimalidad.</li>
+      <li>Lecturas recomendadas (Held & Karp 1962, Bellman 1962, Toth & Vigo 2014).</li>
+    </ul>
+    <p><strong>👉 <a href="https://github.com/leanmasterpymes/gestion_ruta">Abrir el repositorio en GitHub</a></strong> para acceder al material extendido.</p>
+  </div>
+
+  <div class="cta-card">
+    <h2>Si este contenido le resultó útil</h2>
+    <p>👀 <a href="https://colab.research.google.com/github/leanmasterpymes/gestion_ruta/blob/main/notebooks/01_ruteo_multinivel.ipynb">Abra el notebook en Colab</a> antes de cerrar la pestaña, corre con un solo clic, sin instalación.</p>
+    <p>⭐ <a href="https://github.com/leanmasterpymes/gestion_ruta">Marque el repositorio en GitHub</a> para darle visibilidad y poder clonarlo en su empresa.</p>
+    <p>💬 Comparta el artículo con su responsable de logística o de operaciones; el sistema puede evaluarse en una sola jornada con los datos de su propia distribuidora.</p>
+    <p>📩 Si desea adaptar la solución a su flota o integrarla a sus sistemas, queda abierto el canal de mensajes directos.</p>
+  </div>
+
+  <div class="author-card">
+    <div class="name">Manuel Antonio Pérez Ogando</div>
+    <div class="role">Ingeniero industrial, MSc en Gestión Estratégica para el Desarrollo de Software, Profesor de Investigación de Operaciones.</div>
+    <div class="credentials">
+      Especialista en mapeo, análisis y mejora de procesos. Certificado <strong>Lean Six Sigma Green Belt (LSSGB)</strong>. Certificado en <strong>Power BI</strong>. Estudiante de <strong>Matemática Aplicada, mención Informática</strong> en la UASD.
+    </div>
+    <div class="role" style="margin-top:12px; font-style:italic;">Leanmaster Pymes, entrega de la serie semanal sobre ciencia de datos aplicada a la productividad empresarial.</div>
+  </div>
+
+</div>
+
+</body>
+</html>

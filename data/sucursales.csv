@@ -1,0 +1,6 @@
+sucursal_id,lat,lon,n_camiones,capacidad_camion,hora_apertura,hora_cierre
+S1,0.0,0.0,2,1200,7,18
+S2,0.2,0.0,4,800,7,18
+S3,-0.2,0.0,3,1200,7,18
+S4,0.0,0.2,3,800,7,18
+S5,0.0,-0.2,3,800,7,18

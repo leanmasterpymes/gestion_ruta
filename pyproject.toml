@@ -1,0 +1,32 @@
+[project]
+name = "gestion_ruta"
+version = "0.1.0"
+description = "Gestión de rutas multi-sucursal con Machine Learning y programación dinámica."
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+license = { text = "MIT" }
+authors = [
+  { name = "Manuel Antonio Pérez Ogando", email = "leanmasterpymes22@gmail.com" }
+]
+keywords = ["vrp", "operations-research", "machine-learning", "dynamic-programming", "logistics", "pymes"]
+
+dependencies = [
+  "pandas>=2.0",
+  "numpy>=1.24",
+  "scikit-learn>=1.3",
+  "lightgbm>=4.0",
+  "networkx>=3.0",
+  "folium>=0.14",
+  "matplotlib>=3.7",
+  "plotly>=5.15",
+  "streamlit>=1.28",
+  "ortools>=9.7",
+]
+
+[project.urls]
+Homepage = "https://github.com/leanmasterpymes/gestion_ruta"
+Repository = "https://github.com/leanmasterpymes/gestion_ruta"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
