@@ -412,7 +412,7 @@
     <p>La solución se compone de cuatro capas, todas basadas en software libre y reproducibles desde el repositorio. El sistema toma <strong>dos insumos principales</strong>: el histórico de pedidos de los clientes y la disponibilidad de cada centro de distribución (cantidad de camiones y capacidad de cada uno). Conocer la disponibilidad antes de asignar es lo que permite respetar la capacidad real de despacho de cada centro y evitar la sobrecarga.</p>
 
     <figure>
-      <img src="../figuras/diagramas/arquitectura_sistema.png" alt="Pipeline del sistema con dos inputs (histórico de pedidos y disponibilidad por centro) que alimentan la predicción de demanda, el clustering de clientes, la programación dinámica, el plan de rutas coordinado y el dashboard.">
+      <img src="../figuras/diagramas/01_arquitectura_sistema.png" alt="Pipeline del sistema con dos inputs (histórico de pedidos y disponibilidad por centro) que alimentan la predicción de demanda, el clustering de clientes, la programación dinámica, el plan de rutas coordinado y el dashboard.">
       <figcaption>De los datos al plan diario, pipeline end-to-end de la solución.</figcaption>
     </figure>
 
@@ -476,7 +476,7 @@
     <p>A nivel de cliente individual, el error es naturalmente mayor por la varianza propia de cada comercio, pero esa precisión no es la que define la calidad de la planificación: el camión se carga para una ruta completa, no para un cliente. La precisión mejora de forma incremental cuando el modelo se reentrena periódicamente con datos recientes.</p>
 
     <figure>
-      <img src="../figuras/imagenes/mapa_clientes_clusters.png" alt="Mapa de los 50 clientes coloreados por centro de distribución asignado, con los 5 centros marcados como cuadrados.">
+      <img src="../figuras/imagenes/02_mapa_clientes_clusters.png" alt="Mapa de los 50 clientes coloreados por centro de distribución asignado, con los 5 centros marcados como cuadrados.">
       <figcaption>Distribución geográfica de los clientes con su centro asignado por el sistema.</figcaption>
     </figure>
   </section>
@@ -511,7 +511,7 @@
     <p>Una vez resuelta la asignación entre centros, dentro de cada centro se aplica el clustering para definir cuántos camiones se necesitan ese día. La capacidad del camión actúa como restricción dura: si la demanda predicha para un centro excede la capacidad de su flota, el sistema lo detecta antes de salir de la rampa y lo escala como alerta operativa, en lugar de descubrirlo a media jornada.</p>
 
     <figure>
-      <img src="../figuras/imagenes/plan_rutas_resuelto.png" alt="Mapa con las rutas finales resueltas, líneas coloreadas saliendo de cada centro de distribución hacia sus clientes en secuencia óptima.">
+      <img src="../figuras/imagenes/03_plan_rutas_resuelto.png" alt="Mapa con las rutas finales resueltas, líneas coloreadas saliendo de cada centro de distribución hacia sus clientes en secuencia óptima.">
       <figcaption>Plan de rutas resuelto, cada color representa un centro de distribución con sus rutas coordinadas.</figcaption>
     </figure>
   </section>
@@ -592,7 +592,7 @@
     <p>Los dos efectos más subestimados en operaciones que recién implementan este tipo de arquitectura son el <strong>menor uso de subcontrataciones flash</strong> (porque la predicción de demanda anticipa días pico y permite asignar refuerzos planificados en lugar de improvisados) y el <strong>aumento de clientes por ruta</strong> (porque la capacidad real del camión se calibra sobre la demanda esperada del día, no sobre el promedio histórico, que suele ser conservador).</p>
 
     <figure>
-      <img src="../figuras/imagenes/antes_despues.png" alt="Comparativa antes y después en tres barras: kilometraje total, número de rutas y costo estimado.">
+      <img src="../figuras/imagenes/05_antes_despues.png" alt="Comparativa antes y después en tres barras: kilometraje total, número de rutas y costo estimado.">
       <figcaption>Comparativa antes y después, planificación coordinada con predicción y optimización.</figcaption>
     </figure>
 

@@ -44,7 +44,7 @@ def mapa_clientes_clusters(
     plan: pd.DataFrame,
 ) -> Path:
     """Scatter de clientes coloreados por sucursal asignada + posición de las sucursales."""
-    ruta = _ruta("imagenes", "mapa_clientes_clusters.png")
+    ruta = _ruta("imagenes", "02_mapa_clientes_clusters.png")
     fig, ax = plt.subplots(figsize=(10, 8), dpi=DPI)
 
     plan_indexed = plan.set_index("cliente_id")
@@ -82,7 +82,7 @@ def diagrama_arquitectura() -> Path:
     Layout: dos cajas de input arriba que convergen en una flecha hacia "Predicción de demanda",
     y a partir de ahí flujo lineal hasta el dashboard.
     """
-    ruta = _ruta("diagramas", "arquitectura_sistema.png")
+    ruta = _ruta("diagramas", "01_arquitectura_sistema.png")
     fig, ax = plt.subplots(figsize=(16, 5.6), dpi=DPI)
     fig.patch.set_facecolor("white")
     ax.set_facecolor("white")
@@ -237,7 +237,7 @@ def plan_rutas_mapa(
     rutas_resueltas: list,
 ) -> Path:
     """Mapa con las rutas resueltas, líneas coloreadas por sucursal."""
-    ruta_archivo = _ruta("imagenes", "plan_rutas_resuelto.png")
+    ruta_archivo = _ruta("imagenes", "03_plan_rutas_resuelto.png")
     fig, ax = plt.subplots(figsize=(10, 8), dpi=DPI)
 
     plan_indexed = plan.set_index("cliente_id")
@@ -281,7 +281,7 @@ def comparativa_antes_despues(metricas: pd.DataFrame) -> Path:
 
     `metricas` debe tener columnas: ['escenario', 'km_total', 'n_rutas', 'costo_estimado'].
     """
-    ruta = _ruta("imagenes", "antes_despues.png")
+    ruta = _ruta("imagenes", "05_antes_despues.png")
     fig, axes = plt.subplots(1, 3, figsize=(13, 4.5), dpi=DPI)
 
     metricas_indexed = metricas.set_index("escenario")
@@ -417,7 +417,7 @@ def codigo_comandos_clone() -> Path:
 
 def tabla_benchmark_ortools() -> Path:
     """Tabla comparativa motor propio vs OR-Tools renderizada como imagen."""
-    ruta = _ruta("tablas", "benchmark_ortools.png")
+    ruta = _ruta("tablas", "04_benchmark_ortools.png")
     fig, ax = plt.subplots(figsize=(11, 2.6), dpi=DPI)
     ax.axis("off")
 

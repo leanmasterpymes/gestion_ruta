@@ -66,8 +66,9 @@ def _add_horizontal_line(doc: Document) -> None:
     pPr.append(pBdr)
 
 
-def aviso(tipo: str, archivo: str, alt: str) -> str:
-    return f"[INSERTAR AQUÍ — TIPO: {tipo} · ARCHIVO: {archivo} · ALT: {alt}]"
+def aviso(tipo: str, archivo: str, alt: str, numero: int | None = None) -> str:
+    prefijo = f"[INSERTAR IMAGEN {numero:02d}" if numero is not None else "[INSERTAR AQUÍ"
+    return f"{prefijo} — TIPO: {tipo} · ARCHIVO: {archivo} · ALT: {alt}]"
 
 
 def add_titulo_principal(doc: Document, texto: str) -> None:
@@ -365,8 +366,9 @@ def construir() -> Document:
     )
     add_aviso(doc, aviso(
         "diagrama",
-        "figuras/diagramas/arquitectura_sistema.png",
+        "figuras/diagramas/01_arquitectura_sistema.png",
         "Pipeline del sistema con dos inputs (histórico de pedidos y disponibilidad por centro) que alimentan la predicción de demanda, el clustering de clientes, la programación dinámica, el plan de rutas coordinado y el dashboard.",
+        numero=1,
     ))
     add_lista(doc, [
         "Predicción de demanda por cliente: un modelo aprende los patrones de pedido de cada cliente y proyecta cuánto pedirá mañana, capturando estacionalidad semanal, tendencia mensual y comportamiento individual.",
@@ -416,8 +418,9 @@ def construir() -> Document:
     )
     add_aviso(doc, aviso(
         "imagen",
-        "figuras/imagenes/mapa_clientes_clusters.png",
+        "figuras/imagenes/02_mapa_clientes_clusters.png",
         "Mapa de los 50 clientes coloreados por centro de distribución asignado, con los 5 centros marcados como cuadrados.",
+        numero=2,
     ))
 
     # ── Sección 4 ───────────────────────────────────────────────────────
@@ -470,8 +473,9 @@ def construir() -> Document:
     )
     add_aviso(doc, aviso(
         "imagen",
-        "figuras/imagenes/plan_rutas_resuelto.png",
+        "figuras/imagenes/03_plan_rutas_resuelto.png",
         "Mapa con las rutas finales resueltas, líneas coloreadas saliendo de cada centro de distribución hacia sus clientes en secuencia óptima.",
+        numero=3,
     ))
 
     # ── Sección 6 ───────────────────────────────────────────────────────
@@ -483,8 +487,9 @@ def construir() -> Document:
     )
     add_aviso(doc, aviso(
         "tabla",
-        "figuras/tablas/benchmark_ortools.png",
+        "figuras/tablas/04_benchmark_ortools.png",
         "Tabla comparativa: ruta única 12 clientes, diferencia 0%, sistema propio 50× más rápido. Plan completo 50 clientes, diferencia +15.7% bajo restricción real de centros múltiples.",
+        numero=4,
     ))
     add_callout(
         doc,
@@ -541,8 +546,9 @@ def construir() -> Document:
     )
     add_aviso(doc, aviso(
         "imagen",
-        "figuras/imagenes/antes_despues.png",
+        "figuras/imagenes/05_antes_despues.png",
         "Comparativa antes y después en tres barras: kilometraje total, número de rutas y costo estimado.",
+        numero=5,
     ))
 
     # ── Sección 8 ───────────────────────────────────────────────────────

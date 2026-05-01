@@ -334,7 +334,7 @@
     <p>La solución se compone de cuatro capas, todas basadas en software libre y reproducibles desde el repositorio. El sistema toma <strong>dos insumos principales</strong>: el histórico de pedidos de los clientes y la disponibilidad de cada centro de distribución (cantidad de camiones y capacidad de cada uno). Conocer la disponibilidad antes de asignar es lo que permite respetar la capacidad real de despacho de cada centro y evitar la sobrecarga.</p>
 
     <figure>
-      <img src="../figuras/diagramas/arquitectura_sistema.png" alt="Pipeline del sistema con dos inputs (histórico de pedidos y disponibilidad por centro) que alimentan la predicción de demanda, el clustering de clientes, la programación dinámica, el plan de rutas coordinado y el dashboard.">
+      <img src="../figuras/diagramas/01_arquitectura_sistema.png" alt="Pipeline del sistema con dos inputs (histórico de pedidos y disponibilidad por centro) que alimentan la predicción de demanda, el clustering de clientes, la programación dinámica, el plan de rutas coordinado y el dashboard.">
       <figcaption>De los datos al plan diario, pipeline end-to-end de la solución.</figcaption>
     </figure>
 
@@ -390,7 +390,7 @@
     <p>La métrica que más importa para la planificación de capacidad es el <strong>error sobre la demanda agregada por día</strong>: si la flota total va a recibir alrededor de 870 unidades en pedidos para mañana, el modelo se equivoca en promedio un 10% (cerca de 87 unidades arriba o abajo). Ese rango de error es suficiente para dimensionar correctamente cuántos camiones cargar y permite anticipar días pico antes de que aparezca la sobrecarga.</p>
 
     <figure>
-      <img src="../figuras/imagenes/mapa_clientes_clusters.png" alt="Mapa de los 50 clientes coloreados por centro de distribución asignado, con los 5 centros marcados como cuadrados.">
+      <img src="../figuras/imagenes/02_mapa_clientes_clusters.png" alt="Mapa de los 50 clientes coloreados por centro de distribución asignado, con los 5 centros marcados como cuadrados.">
       <figcaption>Distribución geográfica de los clientes con su centro asignado por el sistema.</figcaption>
     </figure>
   </section>
@@ -417,7 +417,7 @@
     <p>La asignación coordinada plantea el problema desde otro lugar: cada centro tiene una capacidad real (cantidad de camiones multiplicada por la capacidad de cada camión), y cada cliente debe asignarse de modo que se minimice la distancia total respetando esa capacidad. El sistema resuelve este planteo en milisegundos y elimina los solapamientos sin necesidad de redibujar zonas a mano.</p>
 
     <figure>
-      <img src="../figuras/imagenes/plan_rutas_resuelto.png" alt="Mapa con las rutas finales resueltas, líneas coloreadas saliendo de cada centro de distribución hacia sus clientes en secuencia óptima.">
+      <img src="../figuras/imagenes/03_plan_rutas_resuelto.png" alt="Mapa con las rutas finales resueltas, líneas coloreadas saliendo de cada centro de distribución hacia sus clientes en secuencia óptima.">
       <figcaption>Plan de rutas resuelto, cada color representa un centro de distribución con sus rutas coordinadas.</figcaption>
     </figure>
   </section>
@@ -490,7 +490,7 @@
     </div>
 
     <figure>
-      <img src="../figuras/imagenes/antes_despues.png" alt="Comparativa antes y después en tres barras: kilometraje total, número de rutas y costo estimado.">
+      <img src="../figuras/imagenes/05_antes_despues.png" alt="Comparativa antes y después en tres barras: kilometraje total, número de rutas y costo estimado.">
       <figcaption>Comparativa antes y después, planificación coordinada con predicción y optimización.</figcaption>
     </figure>
   </section>

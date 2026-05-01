@@ -282,11 +282,11 @@ def construir() -> nbf.NotebookNode:
     cells.append(code(
         "viz.mapa_clientes_clusters(clientes, sucursales, plan_coord)\n"
         "from IPython.display import Image\n"
-        "Image('../figuras/imagenes/mapa_clientes_clusters.png')"
+        "Image('../figuras/imagenes/02_mapa_clientes_clusters.png')"
     ))
     cells.append(code(
         "viz.plan_rutas_mapa(plan_coord, sucursales, rutas_c)\n"
-        "Image('../figuras/imagenes/plan_rutas_resuelto.png')"
+        "Image('../figuras/imagenes/03_plan_rutas_resuelto.png')"
     ))
 
     cells.append(md(
@@ -333,7 +333,7 @@ def construir() -> nbf.NotebookNode:
         "     'n_rutas': len(rutas_c), 'costo_estimado': km_c * 1.00},\n"
         "])\n"
         "viz.comparativa_antes_despues(metricas)\n"
-        "Image('../figuras/imagenes/antes_despues.png')"
+        "Image('../figuras/imagenes/05_antes_despues.png')"
     ))
 
     cells.append(md(
