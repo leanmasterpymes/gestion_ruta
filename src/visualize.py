@@ -465,6 +465,135 @@ def formula_bellman() -> Path:
     return ruta
 
 
+def hero_portada() -> Path:
+    """Imagen de portada del artículo: red de centros de distribución conectados,
+    camiones estilizados y partículas, estética tecnológica moderna oscura.
+    """
+    ruta = _ruta("imagenes", "00_hero_portada.png")
+    fig, ax = plt.subplots(figsize=(16, 9), dpi=DPI)
+    ax.set_xlim(0, 16)
+    ax.set_ylim(0, 9)
+    ax.axis("off")
+
+    rng = np.random.default_rng(42)
+
+    bg_top = np.array([0x07, 0x14, 0x2A]) / 255
+    bg_mid = np.array([0x0F, 0x2D, 0x52]) / 255
+    bg_bot = np.array([0x07, 0x14, 0x2A]) / 255
+    bg = np.zeros((400, 1, 3))
+    for i in range(400):
+        t = i / 399
+        if t < 0.5:
+            c = bg_top + (bg_mid - bg_top) * (t / 0.5)
+        else:
+            c = bg_mid + (bg_bot - bg_mid) * ((t - 0.5) / 0.5)
+        bg[i, 0] = c
+    ax.imshow(bg, extent=(0, 16, 0, 9), aspect="auto", interpolation="bilinear", zorder=0)
+
+    grid_color = (0.20, 0.40, 0.65, 0.18)
+    for x in np.arange(0, 16.1, 0.8):
+        ax.axvline(x, color=grid_color, linewidth=0.5, zorder=1)
+    for y in np.arange(0, 9.1, 0.8):
+        ax.axhline(y, color=grid_color, linewidth=0.5, zorder=1)
+
+    n_part = 80
+    part_x = rng.uniform(0, 16, n_part)
+    part_y = rng.uniform(0, 9, n_part)
+    part_s = rng.uniform(2, 14, n_part)
+    part_a = rng.uniform(0.1, 0.45, n_part)
+    for x, y, s, a in zip(part_x, part_y, part_s, part_a):
+        ax.scatter(x, y, s=s, color="#7BB7F0", alpha=a, zorder=2, edgecolor="none")
+
+    centros = [
+        ("DC-N",  3.4, 6.6, "#FF6B35"),
+        ("DC-W",  2.0, 3.2, "#37C7FF"),
+        ("DC-E",  9.4, 7.2, "#7CDB7E"),
+        ("DC-S",  7.6, 2.4, "#FFC857"),
+        ("DC-C", 12.5, 4.6, "#C58BF2"),
+    ]
+
+    n_clientes = 38
+    clientes_xy = []
+    for cx, cy, _ in [(c[1], c[2], c[3]) for c in centros]:
+        n_local = rng.integers(5, 10)
+        for _ in range(n_local):
+            r = rng.uniform(0.6, 2.4)
+            theta = rng.uniform(0, 2 * np.pi)
+            x = cx + r * np.cos(theta)
+            y = cy + r * np.sin(theta)
+            x = float(np.clip(x, 0.6, 15.4))
+            y = float(np.clip(y, 0.6, 8.4))
+            clientes_xy.append((x, y))
+    clientes_xy = clientes_xy[:n_clientes]
+
+    centro_indices = list(range(len(centros)))
+    cliente_a_centro = []
+    for cx, cy in clientes_xy:
+        dists = [(np.hypot(cx - c[1], cy - c[2]), i) for i, c in enumerate(centros)]
+        cliente_a_centro.append(min(dists)[1])
+
+    for (cx, cy), ci in zip(clientes_xy, cliente_a_centro):
+        nombre, dx, dy, color = centros[ci]
+        for halo_w, halo_a in [(3.5, 0.10), (2.0, 0.22)]:
+            ax.plot([dx, cx], [dy, cy], color=color, alpha=halo_a, linewidth=halo_w, zorder=3)
+        ax.plot([dx, cx], [dy, cy], color=color, alpha=0.9, linewidth=1.0, zorder=4)
+
+    for cx, cy in clientes_xy:
+        ax.scatter(cx, cy, s=180, color="white", alpha=0.18, zorder=5, edgecolor="none")
+        ax.scatter(cx, cy, s=55,  color="white", alpha=0.95, zorder=6,
+                   edgecolor="#0F2D52", linewidth=0.8)
+
+    for nombre, dx, dy, color in centros:
+        for halo_s, halo_a in [(1100, 0.10), (700, 0.18), (420, 0.30)]:
+            ax.scatter(dx, dy, s=halo_s, color=color, alpha=halo_a, zorder=7, edgecolor="none")
+        ax.scatter(dx, dy, s=260, color=color, marker="s", zorder=8,
+                   edgecolor="white", linewidth=2.4)
+        ax.text(dx, dy, nombre, ha="center", va="center", fontsize=8.5,
+                fontweight="bold", color="white", zorder=9)
+
+    def truck(ax, x, y, color, scale=0.45):
+        body_w, body_h = 1.2 * scale, 0.55 * scale
+        cab_w, cab_h = 0.55 * scale, 0.55 * scale
+        ax.add_patch(plt.Rectangle((x, y), body_w, body_h,
+                                   facecolor=color, edgecolor="white", linewidth=1.2, zorder=10))
+        ax.add_patch(plt.Rectangle((x + body_w, y + 0.05 * scale), cab_w, cab_h - 0.05 * scale,
+                                   facecolor="#0F2D52", edgecolor="white", linewidth=1.2, zorder=10))
+        ax.add_patch(plt.Rectangle((x + body_w + 0.06 * scale, y + 0.18 * scale),
+                                   cab_w - 0.16 * scale, cab_h - 0.30 * scale,
+                                   facecolor="#7BB7F0", edgecolor="none", zorder=11))
+        wheel_r = 0.10 * scale
+        for wx in [x + 0.18 * scale, x + body_w - 0.20 * scale, x + body_w + cab_w - 0.20 * scale]:
+            ax.add_patch(plt.Circle((wx, y - wheel_r * 0.4), wheel_r,
+                                    facecolor="#1A2233", edgecolor="white", linewidth=1.0, zorder=12))
+
+    truck(ax, 5.2, 8.30, "#FF6B35", scale=0.55)
+    truck(ax, 0.4, 7.70, "#37C7FF", scale=0.55)
+    truck(ax, 13.6, 0.55, "#7CDB7E", scale=0.55)
+
+    ax.text(0.6, 1.95, "Gestión de rutas",
+            fontsize=42, fontweight="bold", color="white",
+            ha="left", va="bottom",
+            family="DejaVu Sans", zorder=13)
+    ax.text(0.6, 1.05, "multi-sucursal",
+            fontsize=42, fontweight="bold", color="#FFC857",
+            ha="left", va="bottom",
+            family="DejaVu Sans", zorder=13)
+    ax.text(0.65, 0.55, "Machine Learning   ·   Programación dinámica   ·   Open Source",
+            fontsize=12, color="#A8C8E8", ha="left", va="bottom",
+            family="DejaVu Sans", fontweight="600", zorder=13)
+
+    ax.text(15.4, 8.55, "L E A N M A S T E R   P Y M E S",
+            fontsize=11, color="#FFC857", fontweight="bold",
+            ha="right", va="top", zorder=13)
+    ax.text(15.4, 8.10, "Caso técnico",
+            fontsize=10, color="#A8C8E8",
+            ha="right", va="top", style="italic", zorder=13)
+
+    fig.savefig(ruta, bbox_inches="tight", facecolor="#07142A", pad_inches=0)
+    plt.close(fig)
+    return ruta
+
+
 def _callout_render(
     nombre_archivo: str,
     titulo: str | None,
@@ -615,6 +744,7 @@ def generar_todas(
 ) -> dict[str, Path]:
     """Genera el set completo de figuras del artículo y devuelve sus rutas."""
     rutas: dict[str, Path] = {}
+    rutas["hero"] = hero_portada()
     rutas["arquitectura"] = diagrama_arquitectura()
     rutas["mapa_clusters"] = mapa_clientes_clusters(clientes, sucursales, plan)
     rutas["plan_rutas"] = plan_rutas_mapa(plan, sucursales, rutas_resueltas)

@@ -296,6 +296,12 @@ def construir() -> Document:
         s.right_margin = Cm(2.4)
 
     # ── Portada ─────────────────────────────────────────────────────────
+    add_aviso(doc, aviso(
+        "imagen de portada",
+        "figuras/imagenes/00_hero_portada.png",
+        "Portada del artículo: red tecnológica con cinco centros de distribución conectados a clientes en distintos colores, tres camiones y branding Leanmaster Pymes sobre fondo azul oscuro con grilla y partículas. Sube esta imagen como portada del Article de LinkedIn.",
+        numero=1,
+    ))
     add_titulo_principal(
         doc,
         "Gestión de rutas multi-sucursal con Machine Learning y programación dinámica",
@@ -347,12 +353,18 @@ def construir() -> Document:
         "Cuando el plan del día queda corto, se subcontrata un camión flash con un costo 30 a 50% superior al de un camión propio. Nadie mide cuánto se va al año por este renglón.",
         "Cuando el plan queda holgado, los choferes regresan a la rampa con espacio vacío y se justifican horas que no se trabajaron en ruta. La utilización real de la flota nunca aparece en el reporte mensual.",
     ])
-    add_callout(
+    add_p(
         doc,
         "Para responder a esta situación desarrollé un sistema de código abierto, disponible en GitHub: "
         "github.com/leanmasterpymes/gestion_rutas, que aborda el problema desde la predicción de demanda "
         "hasta el plan diario coordinado entre los centros de distribución.",
     )
+    add_aviso(doc, aviso(
+        "callout",
+        "figuras/callouts/callout_repo_github.png",
+        "Caja CTA destacando el sistema de código abierto disponible en GitHub: github.com/leanmasterpymes/gestion_rutas, que aborda el problema desde la predicción de demanda hasta el plan diario coordinado.",
+        numero=2,
+    ))
 
     # ── Sección 2 ───────────────────────────────────────────────────────
     add_section_heading(doc, "2", "La arquitectura propuesta")
@@ -368,7 +380,7 @@ def construir() -> Document:
         "diagrama",
         "figuras/diagramas/01_arquitectura_sistema.png",
         "Pipeline del sistema con dos inputs (histórico de pedidos y disponibilidad por centro) que alimentan la predicción de demanda, el clustering de clientes, la programación dinámica, el plan de rutas coordinado y el dashboard.",
-        numero=1,
+        numero=3,
     ))
     add_lista(doc, [
         "Predicción de demanda por cliente: un modelo aprende los patrones de pedido de cada cliente y proyecta cuánto pedirá mañana, capturando estacionalidad semanal, tendencia mensual y comportamiento individual.",
@@ -417,10 +429,16 @@ def construir() -> Document:
         "10%, suficiente para dimensionar correctamente cuántos camiones cargar.",
     )
     add_aviso(doc, aviso(
+        "callout",
+        "figuras/callouts/metric_grid_kpi.png",
+        "Cuadrícula de cuatro métricas del modelo de demanda: 10.1% de error en la demanda total esperada por día, 11.3 unidades de error promedio por cliente y día, 540 días de histórico y 50 clientes en el caso de estudio.",
+        numero=4,
+    ))
+    add_aviso(doc, aviso(
         "imagen",
         "figuras/imagenes/02_mapa_clientes_clusters.png",
         "Mapa de los 50 clientes coloreados por centro de distribución asignado, con los 5 centros marcados como cuadrados.",
-        numero=2,
+        numero=5,
     ))
 
     # ── Sección 4 ───────────────────────────────────────────────────────
@@ -432,12 +450,12 @@ def construir() -> Document:
         "resolver cada pieza una sola vez y reutilizar el resultado. La técnica se llama programación "
         "dinámica, y el algoritmo clásico que la materializa para el ruteo es Held-Karp (1962).",
     )
-    add_pull_quote(
-        doc,
-        "¿Cuál es el camino más corto para visitar este conjunto de clientes y volver al centro de "
-        "distribución? Esa es la pregunta. La programación dinámica la responde sin probar todas las "
-        "combinaciones posibles.",
-    )
+    add_aviso(doc, aviso(
+        "callout",
+        "figuras/callouts/pull_quote_held_karp.png",
+        "Cita destacada: ¿Cuál es el camino más corto para visitar este conjunto de clientes y volver al centro de distribución? La programación dinámica responde esa pregunta sin probar todas las combinaciones posibles.",
+        numero=6,
+    ))
     add_p(
         doc,
         "El método tiene un límite práctico: cuando una ruta crece de 15 clientes en adelante, el "
@@ -475,7 +493,7 @@ def construir() -> Document:
         "imagen",
         "figuras/imagenes/03_plan_rutas_resuelto.png",
         "Mapa con las rutas finales resueltas, líneas coloreadas saliendo de cada centro de distribución hacia sus clientes en secuencia óptima.",
-        numero=3,
+        numero=7,
     ))
 
     # ── Sección 6 ───────────────────────────────────────────────────────
@@ -489,16 +507,14 @@ def construir() -> Document:
         "tabla",
         "figuras/tablas/04_benchmark_ortools.png",
         "Tabla comparativa: ruta única 12 clientes, diferencia 0%, sistema propio 50× más rápido. Plan completo 50 clientes, diferencia +15.7% bajo restricción real de centros múltiples.",
-        numero=4,
+        numero=8,
     ))
-    add_callout(
-        doc,
-        "En el caso pequeño, el sistema propio encuentra el óptimo idéntico al estándar industrial, "
-        "50 veces más rápido. En el caso grande, OR-Tools logra menor kilometraje porque consolida toda "
-        "la flota en un único depósito ficticio (un esquema irrealizable en la operación real, donde "
-        "cada camión sale de su centro). Bajo la misma restricción, el sistema propio queda dentro "
-        "de un margen razonable del óptimo industrial.",
-    )
+    add_aviso(doc, aviso(
+        "callout",
+        "figuras/callouts/callout_info_benchmark.png",
+        "Lectura del benchmark: en el caso pequeño el sistema propio iguala al estándar industrial 50 veces más rápido. En el caso grande OR-Tools logra menos kilómetros porque consolida la flota en un depósito ficticio, esquema irrealizable en la operación real. Bajo la misma restricción operativa el motor propio queda dentro de un margen razonable del óptimo.",
+        numero=9,
+    ))
 
     # ── Sección 7 ───────────────────────────────────────────────────────
     add_section_heading(doc, "7", "Cinco beneficios operativos medibles")
@@ -548,7 +564,7 @@ def construir() -> Document:
         "imagen",
         "figuras/imagenes/05_antes_despues.png",
         "Comparativa antes y después en tres barras: kilometraje total, número de rutas y costo estimado.",
-        numero=5,
+        numero=10,
     ))
 
     # ── Sección 8 ───────────────────────────────────────────────────────
