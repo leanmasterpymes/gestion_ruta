@@ -305,7 +305,7 @@
     <ul>
       <li><strong>⭐ <a href="https://github.com/leanmasterpymes/gestion_rutas">Repositorio en GitHub (código abierto, MIT)</a></strong>: clónalo y ejecuta el sistema completo en tu computadora.</li>
       <li><strong>📓 <a href="https://colab.research.google.com/github/leanmasterpymes/gestion_rutas/blob/main/notebooks/01_ruteo_multinivel.ipynb">Notebook en Google Colab</a></strong>: el flujo completo paso a paso, sin instalar nada.</li>
-      <li><strong>👉 <a href="https://gestionruta-fvzdvkcjthzfavm9fcmk9c.streamlit.app/">Planificador interactivo en Streamlit</a></strong>: plan diario con mapa, métricas y descarga del plan en CSV, sin instalación.</li>
+      <li><strong>👉 <a href="https://gestionrutas-wvounbh6xdcjuvt5kqesh9.streamlit.app/">Planificador interactivo en Streamlit</a></strong>: plan diario con mapa, métricas y descarga del plan en CSV, sin instalación.</li>
     </ul>
   </div>
 
@@ -323,9 +323,9 @@
       <li>Cuando el plan queda holgado, los choferes regresan a la rampa con espacio vacío y se justifican horas que no se trabajaron en ruta. La utilización real de la flota nunca aparece en el reporte mensual.</li>
     </ul>
 
-    <div class="callout">
-      Para responder a esta situación desarrollé un sistema de código abierto, disponible en GitHub: <a href="https://github.com/leanmasterpymes/gestion_rutas"><strong>github.com/leanmasterpymes/gestion_rutas</strong></a>, que aborda el problema desde la predicción de demanda hasta el plan diario coordinado entre los centros de distribución.
-    </div>
+    <figure>
+      <img src="../figuras/callouts/callout_repo_github.png" alt="Caja CTA destacando el sistema de código abierto disponible en GitHub: github.com/leanmasterpymes/gestion_rutas, que aborda el problema desde la predicción de demanda hasta el plan diario coordinado.">
+    </figure>
   </section>
 
   <section class="card" id="arquitectura">
@@ -368,24 +368,9 @@
 
     <p>Sobre el caso de estudio del repositorio (50 clientes, 540 días de histórico), el modelo logra estas métricas en datos que el modelo no usó para aprender:</p>
 
-    <div class="metric-grid">
-      <div class="metric">
-        <div class="num">10.1%</div>
-        <div class="lbl">error en la demanda total<br>esperada por día</div>
-      </div>
-      <div class="metric">
-        <div class="num">11.3</div>
-        <div class="lbl">unidades de error promedio<br>por cliente y día</div>
-      </div>
-      <div class="metric">
-        <div class="num">540</div>
-        <div class="lbl">días de histórico</div>
-      </div>
-      <div class="metric">
-        <div class="num">50</div>
-        <div class="lbl">clientes en el caso</div>
-      </div>
-    </div>
+    <figure>
+      <img src="../figuras/callouts/metric_grid_kpi.png" alt="Cuadrícula de cuatro métricas del modelo de demanda: 10.1% de error en la demanda total esperada por día, 11.3 unidades de error promedio por cliente y día, 540 días de histórico y 50 clientes en el caso de estudio.">
+    </figure>
 
     <p>La métrica que más importa para la planificación de capacidad es el <strong>error sobre la demanda agregada por día</strong>: si la flota total va a recibir alrededor de 870 unidades en pedidos para mañana, el modelo se equivoca en promedio un 10% (cerca de 87 unidades arriba o abajo). Ese rango de error es suficiente para dimensionar correctamente cuántos camiones cargar y permite anticipar días pico antes de que aparezca la sobrecarga.</p>
 
@@ -400,9 +385,9 @@
 
     <p>La optimización de rutas se apoya en una idea de los años sesenta que sigue siendo el corazón de los mejores sistemas industriales: descomponer un problema grande en piezas pequeñas, resolver cada pieza una sola vez y reutilizar el resultado. La técnica se llama <strong>programación dinámica</strong>, y el algoritmo clásico que la materializa para el ruteo es <strong>Held-Karp (1962)</strong>.</p>
 
-    <blockquote class="pull">
-      "¿Cuál es el camino más corto para visitar este conjunto de clientes y volver al centro de distribución?". Esa es la pregunta. La programación dinámica la responde sin probar todas las combinaciones posibles.
-    </blockquote>
+    <figure>
+      <img src="../figuras/callouts/pull_quote_held_karp.png" alt="Cita destacada: ¿Cuál es el camino más corto para visitar este conjunto de clientes y volver al centro de distribución? La programación dinámica responde esa pregunta sin probar todas las combinaciones posibles.">
+    </figure>
 
     <p>El método tiene un límite práctico: cuando una ruta crece de 15 clientes en adelante, el cálculo se vuelve demasiado pesado. La estrategia del sistema es respetar ese límite y usar <strong>descomposición por zonas</strong>: el clustering reduce 50 clientes a varias rutas pequeñas, cada una con menos de 15 clientes, donde el algoritmo exacto resuelve el óptimo en milisegundos. Cuando una zona excede los 15 clientes, se sustituye automáticamente por una variante aproximada que sigue siendo óptima en la práctica.</p>
 
@@ -427,19 +412,14 @@
 
     <p>Para validar la calidad del sistema, el motor propio se compara lado a lado con <strong>Google OR-Tools</strong>, el estándar industrial de problemas de ruteo. Sobre el mismo caso de estudio:</p>
 
-    <table>
-      <thead>
-        <tr><th>Caso</th><th>Sistema propio</th><th>OR-Tools</th><th>Diferencia</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Ruta única, 12 clientes</td><td>154.06 km</td><td>154.06 km</td><td><strong>0.0%</strong>, 50× más rápido</td></tr>
-        <tr><td>Plan completo, 50 clientes y 5 centros</td><td>334.66 km</td><td>289.31 km</td><td><strong>+15.7%</strong> bajo restricción real</td></tr>
-      </tbody>
-    </table>
+    <figure>
+      <img src="../figuras/tablas/04_benchmark_ortools.png" alt="Tabla comparativa motor propio vs Google OR-Tools: en el TSP exacto de 12 clientes ambos llegan a 154.06 km, con el motor propio 50 veces más rápido (95 ms vs 5000 ms); en el plan completo de 50 clientes y 5 sucursales el motor propio entrega 334.66 km vs 289.31 km de OR-Tools, un gap de 15.7%.">
+      <figcaption>Benchmark lado a lado · motor propio vs Google OR-Tools sobre el mismo dataset.</figcaption>
+    </figure>
 
-    <div class="callout-info">
-      En el caso pequeño, el sistema propio encuentra el óptimo idéntico al estándar industrial, 50 veces más rápido. En el caso grande, OR-Tools logra menor kilometraje porque consolida toda la flota en un único depósito ficticio (un esquema irrealizable en la operación real, donde cada camión sale de su centro de origen y debe regresar a él al cierre del turno). Bajo la misma restricción operativa, el sistema propio queda dentro de un margen razonable del óptimo industrial.
-    </div>
+    <figure>
+      <img src="../figuras/callouts/callout_info_benchmark.png" alt="Lectura del benchmark: en el caso pequeño el sistema propio iguala al estándar industrial 50 veces más rápido. En el caso grande OR-Tools logra menos kilómetros porque consolida la flota en un depósito ficticio, esquema irrealizable en la operación real. Bajo la misma restricción operativa el motor propio queda dentro de un margen razonable del óptimo.">
+    </figure>
   </section>
 
   <section class="card" id="beneficios">

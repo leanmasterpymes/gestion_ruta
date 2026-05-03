@@ -465,6 +465,146 @@ def formula_bellman() -> Path:
     return ruta
 
 
+def _callout_render(
+    nombre_archivo: str,
+    titulo: str | None,
+    cuerpo: str,
+    color_borde: str,
+    color_fondo: str,
+    color_texto: str = "#0F1729",
+    altura: float = 2.6,
+) -> Path:
+    """Renderiza un callout (caja con borde lateral y fondo coloreado) como PNG."""
+    ruta = _ruta("callouts", nombre_archivo)
+    fig, ax = plt.subplots(figsize=(11, altura), dpi=DPI)
+    fig.patch.set_facecolor("white")
+    ax.set_facecolor("white")
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.axis("off")
+
+    ax.add_patch(plt.Rectangle((0.0, 0.0), 1.0, 1.0, facecolor=color_fondo, edgecolor="none"))
+    ax.add_patch(plt.Rectangle((0.0, 0.0), 0.012, 1.0, facecolor=color_borde, edgecolor="none"))
+
+    y_cursor = 0.86
+    if titulo:
+        ax.text(0.035, y_cursor, titulo, fontsize=13, fontweight="bold",
+                color=color_borde, va="top", ha="left")
+        y_cursor -= 0.18
+
+    ax.text(0.035, y_cursor, cuerpo, fontsize=11.5, color=color_texto,
+            va="top", ha="left", wrap=True, linespacing=1.5)
+
+    fig.savefig(ruta, bbox_inches="tight", facecolor="white")
+    plt.close(fig)
+    return ruta
+
+
+def callout_repo_github() -> Path:
+    """Caja CTA al repositorio (sección 1 del artículo)."""
+    return _callout_render(
+        nombre_archivo="callout_repo_github.png",
+        titulo="★ Sistema de código abierto",
+        cuerpo=(
+            "Para responder a esta situación desarrollé un sistema de código\n"
+            "abierto, disponible en GitHub:  github.com/leanmasterpymes/gestion_rutas\n"
+            "\n"
+            "Aborda el problema desde la predicción de demanda hasta el plan\n"
+            "diario coordinado entre los centros de distribución."
+        ),
+        color_borde="#D96F00",
+        color_fondo="#FDF3E6",
+        altura=3.0,
+    )
+
+
+def metric_grid_kpi() -> Path:
+    """Cuadrícula de 4 KPIs del modelo de demanda (sección 3)."""
+    ruta = _ruta("callouts", "metric_grid_kpi.png")
+    fig, axes = plt.subplots(1, 4, figsize=(13, 3.4), dpi=DPI)
+    fig.patch.set_facecolor("white")
+
+    kpis = [
+        ("10.1%",  "error en la demanda total\nesperada por día"),
+        ("11.3",   "unidades de error promedio\npor cliente y día"),
+        ("540",    "días de\nhistórico"),
+        ("50",     "clientes en\nel caso"),
+    ]
+    color_borde = "#1A4373"
+    color_fondo = "#F4F8FD"
+    color_num = "#1A4373"
+    color_lbl = "#2D3748"
+
+    for ax, (num, lbl) in zip(axes, kpis):
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+        ax.axis("off")
+        ax.add_patch(plt.Rectangle((0.02, 0.05), 0.96, 0.90,
+                                   facecolor=color_fondo, edgecolor=color_borde, linewidth=1.8))
+        ax.text(0.5, 0.62, num, fontsize=34, fontweight="bold",
+                ha="center", va="center", color=color_num)
+        ax.text(0.5, 0.25, lbl, fontsize=10, ha="center", va="center",
+                color=color_lbl, linespacing=1.4)
+
+    fig.suptitle("Métricas del modelo de demanda · validación temporal (test sin filtración)",
+                 fontsize=12, fontweight="bold", y=1.00, color="#0F2D52")
+    fig.tight_layout()
+    fig.savefig(ruta, bbox_inches="tight", facecolor="white")
+    plt.close(fig)
+    return ruta
+
+
+def pull_quote_held_karp() -> Path:
+    """Pull-quote de la sección 4 (programación dinámica)."""
+    ruta = _ruta("callouts", "pull_quote_held_karp.png")
+    fig, ax = plt.subplots(figsize=(11, 3.4), dpi=DPI)
+    fig.patch.set_facecolor("white")
+    ax.set_facecolor("white")
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.axis("off")
+
+    ax.add_patch(plt.Rectangle((0.0, 0.0), 1.0, 1.0, facecolor="#FDF3E6", edgecolor="none"))
+    ax.add_patch(plt.Rectangle((0.0, 0.0), 0.012, 1.0, facecolor="#D96F00", edgecolor="none"))
+
+    ax.text(0.04, 0.92, "“", fontsize=64, color="#D96F00",
+            fontweight="bold", va="top", ha="left")
+
+    cita = (
+        "¿Cuál es el camino más corto para visitar este conjunto de\n"
+        "clientes y volver al centro de distribución?"
+    )
+    explicacion = "La programación dinámica responde esa pregunta sin probar todas las combinaciones posibles."
+
+    ax.text(0.10, 0.72, cita, fontsize=15, fontstyle="italic",
+            color="#1A2233", va="top", ha="left", linespacing=1.5)
+    ax.text(0.10, 0.28, explicacion, fontsize=12, color="#2D3748",
+            va="top", ha="left", linespacing=1.4)
+
+    fig.savefig(ruta, bbox_inches="tight", facecolor="white")
+    plt.close(fig)
+    return ruta
+
+
+def callout_info_benchmark() -> Path:
+    """Callout-info que explica la diferencia de OR-Tools (sección 6)."""
+    return _callout_render(
+        nombre_archivo="callout_info_benchmark.png",
+        titulo="ℹ Lectura del benchmark",
+        cuerpo=(
+            "En el caso pequeño, el sistema propio encuentra el óptimo idéntico al estándar\n"
+            "industrial, 50 veces más rápido. En el caso grande, OR-Tools logra menor\n"
+            "kilometraje porque consolida toda la flota en un único depósito ficticio (un\n"
+            "esquema irrealizable en la operación real, donde cada camión sale de su centro\n"
+            "de origen y debe regresar a él al cierre del turno). Bajo la misma restricción\n"
+            "operativa, el sistema propio queda dentro de un margen razonable del óptimo."
+        ),
+        color_borde="#1A4373",
+        color_fondo="#F4F8FD",
+        altura=3.6,
+    )
+
+
 def generar_todas(
     clientes: pd.DataFrame,
     sucursales: pd.DataFrame,
@@ -484,6 +624,10 @@ def generar_todas(
     rutas["codigo_held_karp"] = codigo_held_karp_extracto()
     rutas["codigo_comandos"] = codigo_comandos_clone()
     rutas["benchmark_ortools"] = tabla_benchmark_ortools()
+    rutas["callout_repo"] = callout_repo_github()
+    rutas["metric_grid"] = metric_grid_kpi()
+    rutas["pull_quote_dp"] = pull_quote_held_karp()
+    rutas["callout_benchmark"] = callout_info_benchmark()
     if df_validacion is not None:
         rutas["demanda_curva"] = curva_demanda(
             df_validacion["real"], df_validacion["predicha"], df_validacion["fecha"],

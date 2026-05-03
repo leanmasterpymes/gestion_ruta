@@ -15,7 +15,7 @@
 
 ## Demo en vivo · sin instalación
 
-- **[Planificador interactivo en Streamlit](https://gestionruta-fvzdvkcjthzfavm9fcmk9c.streamlit.app/):** plan diario coordinado entre centros de distribución, con mapa interactivo, métricas del modelo de demanda, comparativa antes / después y descarga del plan en CSV.
+- **[Planificador interactivo en Streamlit](https://gestionrutas-wvounbh6xdcjuvt5kqesh9.streamlit.app/):** plan diario coordinado entre centros de distribución, con mapa interactivo, métricas del modelo de demanda, comparativa antes / después y descarga del plan en CSV.
 - **⭐ Repositorio (código abierto · MIT):** clónelo y ejecute el stack en su computadora.
 - **Notebook ejecutable en Colab:** algoritmo paso a paso, usa el badge "Open in Colab" de arriba.
 

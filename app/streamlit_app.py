@@ -30,6 +30,7 @@ st.set_page_config(
     page_title="Gestión de rutas multi-sucursal · Leanmaster Pymes",
     page_icon="🚚",
     layout="wide",
+    initial_sidebar_state="expanded",
 )
 
 
@@ -37,6 +38,240 @@ PALETA = [
     "#1F4F87", "#D96F00", "#1F6B33", "#9C2222", "#5B3DA8",
     "#7A5B12", "#147F7B", "#7C2B65",
 ]
+
+
+CSS_EJECUTIVO = """
+<style>
+:root {
+  --color-primary: #1A4373;
+  --color-primary-dark: #0F2D52;
+  --color-primary-soft: #E8F1F8;
+  --color-accent: #D96F00;
+  --color-accent-soft: #FDF3E6;
+  --color-success: #1F6B33;
+  --color-success-soft: #E6F2EA;
+  --color-text: #0F1729;
+  --color-text-soft: #4F5B6F;
+  --color-border: #DFE5EE;
+  --color-bg-card: #FFFFFF;
+  --color-bg-soft: #F4F8FD;
+}
+
+html, body, [class*="stApp"] { background-color: #F7F9FC !important; }
+
+[data-testid="stHeader"] {
+  background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+  height: 4px;
+}
+
+.block-container { padding-top: 1.4rem !important; padding-bottom: 3rem !important; max-width: 1400px; }
+
+.hero-banner {
+  background: linear-gradient(135deg, #0F2D52 0%, #1A4373 55%, #2563A8 100%);
+  padding: 2.4rem 2.6rem 2.0rem 2.6rem;
+  border-radius: 14px;
+  margin-bottom: 1.6rem;
+  color: white;
+  box-shadow: 0 4px 18px rgba(15, 45, 82, 0.18);
+  position: relative;
+  overflow: hidden;
+}
+.hero-banner::after {
+  content: "";
+  position: absolute;
+  right: -40px; top: -40px;
+  width: 220px; height: 220px;
+  background: radial-gradient(circle, rgba(217, 111, 0, 0.32) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #FFD8A8;
+  margin-bottom: 8px;
+}
+.hero-title {
+  font-size: 30px;
+  font-weight: 800;
+  margin: 0 0 10px 0;
+  color: white;
+  letter-spacing: -0.3px;
+  line-height: 1.15;
+}
+.hero-subtitle {
+  font-size: 15.5px;
+  color: rgba(255, 255, 255, 0.86);
+  margin: 0;
+  max-width: 880px;
+  line-height: 1.5;
+}
+.hero-chips { margin-top: 14px; }
+.hero-chip {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: white;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-right: 8px;
+  margin-top: 6px;
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.6px;
+  color: var(--color-primary);
+  margin: 1.2rem 0 0.6rem 0;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--color-primary-soft);
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin-bottom: 1rem;
+}
+.kpi-card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-primary);
+  border-radius: 10px;
+  padding: 16px 18px 14px 18px;
+  box-shadow: 0 1px 3px rgba(15, 45, 82, 0.04);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(15, 45, 82, 0.12);
+}
+.kpi-card.accent { border-left-color: var(--color-accent); }
+.kpi-card.success { border-left-color: var(--color-success); }
+.kpi-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-text-soft);
+  margin-bottom: 6px;
+}
+.kpi-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-text);
+  line-height: 1.1;
+  margin-bottom: 2px;
+}
+.kpi-help {
+  font-size: 12px;
+  color: var(--color-text-soft);
+}
+
+div[data-testid="stMetric"] {
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 3px rgba(15, 45, 82, 0.04);
+}
+div[data-testid="stMetricLabel"] p {
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-text-soft) !important;
+}
+div[data-testid="stMetricValue"] {
+  color: var(--color-text) !important;
+  font-weight: 800 !important;
+}
+div[data-testid="stMetricDelta"] svg { display: none; }
+
+.stTabs [data-baseweb="tab-list"] {
+  gap: 4px;
+  border-bottom: 2px solid var(--color-border);
+}
+.stTabs [data-baseweb="tab"] {
+  background: transparent;
+  border-radius: 8px 8px 0 0;
+  padding: 10px 18px;
+  color: var(--color-text-soft);
+  font-weight: 600;
+  font-size: 14px;
+}
+.stTabs [aria-selected="true"] {
+  background: var(--color-primary-soft) !important;
+  color: var(--color-primary) !important;
+  border-bottom: 3px solid var(--color-accent) !important;
+}
+
+[data-testid="stSidebar"] {
+  background: linear-gradient(180deg, #0F2D52 0%, #1A4373 100%);
+}
+[data-testid="stSidebar"] * { color: #E8F1F8 !important; }
+[data-testid="stSidebar"] .st-emotion-cache-1weic72 { color: white !important; }
+[data-testid="stSidebar"] hr { border-color: rgba(255, 255, 255, 0.18) !important; }
+[data-testid="stSidebar"] a { color: #FFD8A8 !important; text-decoration: none; }
+[data-testid="stSidebar"] a:hover { text-decoration: underline; }
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] strong { color: white !important; }
+[data-testid="stSidebar"] [role="radiogroup"] label { color: white !important; }
+[data-testid="stSidebar"] [role="radiogroup"] label > div:first-child { background: rgba(255,255,255,0.12) !important; border-color: rgba(255,255,255,0.5) !important; }
+
+.stDataFrame, [data-testid="stDataFrame"] {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.stButton > button, .stDownloadButton > button {
+  border-radius: 8px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+.stDownloadButton > button[kind="primary"] {
+  background: linear-gradient(135deg, var(--color-accent) 0%, #F08B1C 100%) !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(217, 111, 0, 0.3) !important;
+}
+
+div[data-baseweb="notification"] {
+  border-radius: 10px;
+  border-left-width: 4px;
+}
+
+.brand-footer {
+  margin-top: 2.4rem;
+  padding: 1.2rem 1.4rem;
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--color-text-soft);
+}
+.brand-footer strong { color: var(--color-primary); }
+.brand-footer .footer-link {
+  color: var(--color-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+.brand-footer .footer-link:hover { text-decoration: underline; }
+
+#MainMenu { visibility: hidden; }
+footer { visibility: hidden; }
+[data-testid="stDecoration"] { display: none; }
+</style>
+"""
 
 
 @st.cache_data(show_spinner=False)
@@ -120,7 +355,19 @@ def mapa_rutas(plan: pd.DataFrame, sucursales: pd.DataFrame, rutas: list) -> fol
 
 def render_sidebar() -> str:
     with st.sidebar:
-        st.markdown("### ⚙️ Configuración")
+        st.markdown(
+            "<div style='padding:6px 0 16px 0;'>"
+            "<div style='font-size:11px; letter-spacing:2px; color:#FFD8A8; "
+            "font-weight:700; text-transform:uppercase;'>Leanmaster Pymes</div>"
+            "<div style='font-size:18px; font-weight:800; color:white; margin-top:2px;'>"
+            "Planificador de Rutas</div>"
+            "<div style='font-size:12.5px; color:rgba(255,255,255,0.78); margin-top:4px;'>"
+            "ML + Programación dinámica</div>"
+            "</div>",
+            unsafe_allow_html=True,
+        )
+
+        st.markdown("##### Configuración del plan")
         modo = st.radio(
             "Asignación cliente → centro de distribución",
             ["Coordinada (recomendada)", "Naive (cada centro toma cercanos)"],
@@ -135,24 +382,30 @@ def render_sidebar() -> str:
         modo_key = "coordinado" if modo.startswith("Coordinada") else "naive"
 
         st.markdown("---")
-        st.markdown("### 🔧 Pipeline del sistema")
+        st.markdown("##### Pipeline del sistema")
         st.markdown(
-            "1. **Predicción de demanda** por cliente\n"
-            "2. **Clustering inteligente** con restricción de capacidad\n"
-            "3. **Programación dinámica** (Held-Karp / NN + 2-opt)\n"
-            "4. **Coordinación** entre centros de distribución\n\n"
+            "1. Predicción de demanda por cliente\n"
+            "2. Clustering inteligente con restricción de capacidad\n"
+            "3. Programación dinámica (Held-Karp / NN + 2-opt)\n"
+            "4. Coordinación entre centros de distribución\n\n"
             "Validado contra **Google OR-Tools** (estándar industrial)."
         )
 
         st.markdown("---")
         st.markdown(
-            "**Código abierto · Licencia MIT** · "
-            "[github.com/leanmasterpymes/gestion_rutas]"
-            "(https://github.com/leanmasterpymes/gestion_rutas)"
+            "<div style='font-size:12px;'>"
+            "<strong>Código abierto · Licencia MIT</strong><br>"
+            "<a href='https://github.com/leanmasterpymes/gestion_rutas'>"
+            "github.com/leanmasterpymes/gestion_rutas</a></div>",
+            unsafe_allow_html=True,
         )
-        st.caption(
-            "Por Manuel Antonio Pérez Ogando · Leanmaster Pymes · "
+        st.markdown(
+            "<div style='font-size:11.5px; color:rgba(255,255,255,0.65); "
+            "margin-top:10px; line-height:1.5;'>"
+            "Por Manuel Antonio Pérez Ogando — Leanmaster Pymes. "
             "Serie semanal de ciencia de datos aplicada a la productividad empresarial."
+            "</div>",
+            unsafe_allow_html=True,
         )
 
     return modo_key
@@ -165,20 +418,49 @@ def render_kpis(
     km_total: float,
     demanda_total: float,
 ) -> None:
-    col1, col2, col3, col4, col5 = st.columns(5)
-    col1.metric("Clientes", len(clientes_df))
-    col2.metric("Centros de distribución", len(sucursales_df))
-    col3.metric("Rutas planificadas", len(rutas))
-    col4.metric("Kilometraje total", f"{km_total:,.0f} km")
-    col5.metric("Demanda esperada", f"{demanda_total:,.0f} u")
+    cards = [
+        ("Clientes", f"{len(clientes_df)}", "atendidos en el plan", "primary"),
+        ("Centros", f"{len(sucursales_df)}", "de distribución activos", "primary"),
+        ("Rutas", f"{len(rutas)}", "planificadas para mañana", "accent"),
+        ("Kilometraje", f"{km_total:,.0f} km", "recorrido total estimado", "accent"),
+        ("Demanda", f"{demanda_total:,.0f} u", "predicha por el modelo", "success"),
+    ]
+    html = "<div class='kpi-grid'>"
+    for label, value, helper, variant in cards:
+        cls = "kpi-card"
+        if variant == "accent": cls += " accent"
+        if variant == "success": cls += " success"
+        html += (
+            f"<div class='{cls}'>"
+            f"<div class='kpi-label'>{label}</div>"
+            f"<div class='kpi-value'>{value}</div>"
+            f"<div class='kpi-help'>{helper}</div>"
+            f"</div>"
+        )
+    html += "</div>"
+    st.markdown(html, unsafe_allow_html=True)
 
 
 def main() -> None:
+    st.markdown(CSS_EJECUTIVO, unsafe_allow_html=True)
+
     st.markdown(
-        "<h1 style='margin-bottom: 0.2em;'>Gestión de rutas multi-sucursal</h1>"
-        "<p style='color:#4F5B6F; font-size:18px; margin-top:0; margin-bottom: 1em;'>"
-        "Machine Learning + Programación Dinámica · planificación coordinada entre centros de distribución"
-        "</p>",
+        "<div class='hero-banner'>"
+        "<div class='hero-eyebrow'>Leanmaster Pymes · Caso técnico</div>"
+        "<h1 class='hero-title'>Gestión de rutas multi-sucursal</h1>"
+        "<p class='hero-subtitle'>"
+        "Plan diario coordinado entre centros de distribución, alimentado por "
+        "predicción de demanda con Machine Learning y resuelto con programación "
+        "dinámica. Validado contra el estándar industrial Google OR-Tools."
+        "</p>"
+        "<div class='hero-chips'>"
+        "<span class='hero-chip'>LightGBM</span>"
+        "<span class='hero-chip'>K-Means con capacidad</span>"
+        "<span class='hero-chip'>Held-Karp · NN + 2-opt</span>"
+        "<span class='hero-chip'>OR-Tools</span>"
+        "<span class='hero-chip'>Open source · MIT</span>"
+        "</div>"
+        "</div>",
         unsafe_allow_html=True,
     )
 
@@ -200,9 +482,11 @@ def main() -> None:
     rutas, km_total = resolver_plan(plan, sucursales)
     demanda_total = float(pred["demanda_predicha"].sum())
 
-    st.markdown(f"#### Plan diario para **{fecha_obj.strftime('%Y-%m-%d')}**")
+    st.markdown(
+        f"<div class='section-title'>Plan diario · {fecha_obj.strftime('%A %d %B %Y').capitalize()}</div>",
+        unsafe_allow_html=True,
+    )
     render_kpis(clientes, sucursales, rutas, km_total, demanda_total)
-    st.divider()
 
     tab_plan, tab_demanda, tab_compara, tab_descargar = st.tabs(
         ["📍 Plan de rutas", "📊 Predicción de demanda", "🔄 Comparativa antes / después", "💾 Descargar plan"],
@@ -385,6 +669,21 @@ def main() -> None:
             "coordenadas y demanda predicha. Listo para importar en una hoja de cálculo "
             "o en el sistema de despacho."
         )
+
+    st.markdown(
+        "<div class='brand-footer'>"
+        "<div>"
+        "<strong>Leanmaster Pymes</strong> · Manuel Antonio Pérez Ogando &nbsp;·&nbsp; "
+        "Ingeniería industrial · Investigación de operaciones · Lean Six Sigma"
+        "</div>"
+        "<div>"
+        "<a class='footer-link' href='https://github.com/leanmasterpymes/gestion_rutas'>Repositorio en GitHub</a>"
+        " &nbsp;·&nbsp; "
+        "<a class='footer-link' href='https://colab.research.google.com/github/leanmasterpymes/gestion_rutas/blob/main/notebooks/01_ruteo_multinivel.ipynb'>Notebook en Colab</a>"
+        "</div>"
+        "</div>",
+        unsafe_allow_html=True,
+    )
 
 
 if __name__ == "__main__":
