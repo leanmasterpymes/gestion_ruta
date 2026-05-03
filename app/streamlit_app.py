@@ -147,8 +147,8 @@ def render_sidebar() -> str:
         st.markdown("---")
         st.markdown(
             "**Código abierto · Licencia MIT** · "
-            "[github.com/leanmasterpymes/gestion_ruta]"
-            "(https://github.com/leanmasterpymes/gestion_ruta)"
+            "[github.com/leanmasterpymes/gestion_rutas]"
+            "(https://github.com/leanmasterpymes/gestion_rutas)"
         )
         st.caption(
             "Por Manuel Antonio Pérez Ogando · Leanmaster Pymes · "

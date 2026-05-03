@@ -404,8 +404,8 @@ def codigo_comandos_clone() -> Path:
     return codigo_render(
         titulo="Terminal · clonar y ejecutar el sistema",
         codigo=(
-            "$ git clone https://github.com/leanmasterpymes/gestion_ruta\n"
-            "$ cd gestion_ruta\n"
+            "$ git clone https://github.com/leanmasterpymes/gestion_rutas\n"
+            "$ cd gestion_rutas\n"
             "$ pip install -r requirements.txt\n"
             "$ streamlit run app/streamlit_app.py\n"
             "\n"

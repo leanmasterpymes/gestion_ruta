@@ -1,5 +1,5 @@
 [project]
-name = "gestion_ruta"
+name = "gestion_rutas"
 version = "0.1.0"
 description = "Gestión de rutas multi-sucursal con Machine Learning y programación dinámica."
 readme = "README.md"
@@ -24,8 +24,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/leanmasterpymes/gestion_ruta"
-Repository = "https://github.com/leanmasterpymes/gestion_ruta"
+Homepage = "https://github.com/leanmasterpymes/gestion_rutas"
+Repository = "https://github.com/leanmasterpymes/gestion_rutas"
 
 [build-system]
 requires = ["setuptools>=68"]

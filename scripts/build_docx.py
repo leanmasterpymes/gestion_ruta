@@ -246,7 +246,7 @@ def add_tech_deep_block(doc: Document) -> None:
 
     p_cta = doc.add_paragraph()
     _set_paragraph_shading(p_cta, "F4F8FD")
-    run = p_cta.add_run("👉 Abrir el repositorio en GitHub: github.com/leanmasterpymes/gestion_ruta")
+    run = p_cta.add_run("👉 Abrir el repositorio en GitHub: github.com/leanmasterpymes/gestion_rutas")
     run.font.size = Pt(11.5)
     run.bold = True
     run.font.color.rgb = COLOR_PRIMARIO
@@ -323,8 +323,8 @@ def construir() -> Document:
     add_section_heading(doc, "▣", "Demo y código sin instalación")
     add_p(doc, "Antes de leer, abre el sistema funcionando en tu navegador:")
     add_lista(doc, [
-        "⭐ Repositorio en GitHub (código abierto, MIT): github.com/leanmasterpymes/gestion_ruta. Clónalo y ejecuta el sistema completo en tu computadora.",
-        "Notebook en Google Colab: colab.research.google.com/github/leanmasterpymes/gestion_ruta/blob/main/notebooks/01_ruteo_multinivel.ipynb. El flujo completo paso a paso, sin instalar nada.",
+        "⭐ Repositorio en GitHub (código abierto, MIT): github.com/leanmasterpymes/gestion_rutas. Clónalo y ejecuta el sistema completo en tu computadora.",
+        "📓 Notebook en Google Colab: colab.research.google.com/github/leanmasterpymes/gestion_rutas/blob/main/notebooks/01_ruteo_multinivel.ipynb. El flujo completo paso a paso, sin instalar nada.",
         "👉 Planificador interactivo en Streamlit (sin instalación): https://gestionruta-fvzdvkcjthzfavm9fcmk9c.streamlit.app/. Plan diario con mapa interactivo, métricas del modelo de demanda, comparativa antes/después y descarga del plan en CSV.",
     ])
 
@@ -350,7 +350,7 @@ def construir() -> Document:
     add_callout(
         doc,
         "Para responder a esta situación desarrollé un sistema de código abierto, disponible en GitHub: "
-        "github.com/leanmasterpymes/gestion_ruta, que aborda el problema desde la predicción de demanda "
+        "github.com/leanmasterpymes/gestion_rutas, que aborda el problema desde la predicción de demanda "
         "hasta el plan diario coordinado entre los centros de distribución.",
     )
 
@@ -564,7 +564,7 @@ def construir() -> Document:
     add_subheading(doc, "Opción para implementarlo, clonar el repositorio")
     add_p(
         doc,
-        "🔗 El código completo está publicado bajo licencia MIT en github.com/leanmasterpymes/gestion_ruta. "
+        "🔗 El código completo está publicado bajo licencia MIT en github.com/leanmasterpymes/gestion_rutas. "
         "Cualquiera puede clonarlo, correr el sistema en su computadora y conectar sus propios datos de "
         "clientes. El planificador abre en el navegador y permite cargar un archivo de clientes propio "
         "para generar un plan personalizado.",

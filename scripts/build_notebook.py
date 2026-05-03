@@ -19,9 +19,9 @@ import nbformat as nbf
 
 
 NOTEBOOK_PATH = Path(__file__).resolve().parents[1] / "notebooks" / "01_ruteo_multinivel.ipynb"
-REPO_URL = "https://github.com/leanmasterpymes/gestion_ruta"
+REPO_URL = "https://github.com/leanmasterpymes/gestion_rutas"
 COLAB_URL = (
-    "https://colab.research.google.com/github/leanmasterpymes/gestion_ruta/"
+    "https://colab.research.google.com/github/leanmasterpymes/gestion_rutas/"
     "blob/main/notebooks/01_ruteo_multinivel.ipynb"
 )
 

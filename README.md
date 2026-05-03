@@ -1,13 +1,13 @@
 # Gestión de rutas multi-sucursal — Machine Learning + Programación Dinámica
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/leanmasterpymes/gestion_ruta?style=social)](https://github.com/leanmasterpymes/gestion_ruta/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/leanmasterpymes/gestion_ruta?style=social)](https://github.com/leanmasterpymes/gestion_ruta/network/members)
-[![GitHub watchers](https://img.shields.io/github/watchers/leanmasterpymes/gestion_ruta?style=social)](https://github.com/leanmasterpymes/gestion_ruta/watchers)
-[![Last commit](https://img.shields.io/github/last-commit/leanmasterpymes/gestion_ruta)](https://github.com/leanmasterpymes/gestion_ruta/commits)
+[![GitHub stars](https://img.shields.io/github/stars/leanmasterpymes/gestion_rutas?style=social)](https://github.com/leanmasterpymes/gestion_rutas/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/leanmasterpymes/gestion_rutas?style=social)](https://github.com/leanmasterpymes/gestion_rutas/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/leanmasterpymes/gestion_rutas?style=social)](https://github.com/leanmasterpymes/gestion_rutas/watchers)
+[![Last commit](https://img.shields.io/github/last-commit/leanmasterpymes/gestion_rutas)](https://github.com/leanmasterpymes/gestion_rutas/commits)
 [![Python](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-app-FF4B4B.svg)](https://streamlit.io/)
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/leanmasterpymes/gestion_ruta/blob/main/notebooks/01_ruteo_multinivel.ipynb)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/leanmasterpymes/gestion_rutas/blob/main/notebooks/01_ruteo_multinivel.ipynb)
 
 > Arquitectura abierta y reproducible para que cualquier distribuidora con varias sucursales deje de planificar rutas como islas y empiece a operar un plan diario coordinado, alimentado por **predicción de demanda** y **clustering de clientes** con Machine Learning, y resuelto con **programación dinámica** sobre código Python puro.
 
@@ -39,7 +39,7 @@ El resultado es un plan diario coordinado entre sucursales, con cifras reproduci
 ## Estructura del repositorio
 
 ```
-gestion_ruta/
+gestion_rutas/
 ├── app/                     Aplicación Streamlit (planificador interactivo)
 ├── data/                    Datasets sintéticos (CSV/Parquet) generados con seed fija
 ├── docs/                    Artículo en sus tres formatos:
@@ -75,8 +75,8 @@ gestion_ruta/
 Requiere **Python 3.12** (también funciona en 3.11). Versiones más recientes (3.13, 3.14) pueden romper compatibilidad con `lightgbm` u `ortools`; el archivo `runtime.txt` fija la versión para Streamlit Cloud.
 
 ```bash
-git clone https://github.com/leanmasterpymes/gestion_ruta
-cd gestion_ruta
+git clone https://github.com/leanmasterpymes/gestion_rutas
+cd gestion_rutas
 pip install -r requirements.txt
 streamlit run app/streamlit_app.py
 ```
