@@ -466,130 +466,97 @@ def formula_bellman() -> Path:
 
 
 def hero_portada() -> Path:
-    """Imagen de portada del artículo: red de centros de distribución conectados,
-    camiones estilizados y partículas, estética tecnológica moderna oscura.
+    """Portada del artículo: editorial, tipografía dominante, geometría limpia.
+    Sin ilustraciones figurativas. Estética similar a portadas de Bloomberg, FT
+    o McKinsey Insights: tipografía grande, una línea diagonal de acento, red
+    abstracta sutil al fondo derecho como textura, paleta corporativa.
     """
     ruta = _ruta("imagenes", "00_hero_portada.png")
-    fig, ax = plt.subplots(figsize=(16, 9), dpi=DPI)
-    ax.set_xlim(0, 16)
-    ax.set_ylim(0, 9)
+    W, H = 16.0, 9.0
+    fig, ax = plt.subplots(figsize=(W, H), dpi=DPI)
+    ax.set_xlim(0, W)
+    ax.set_ylim(0, H)
     ax.axis("off")
 
-    rng = np.random.default_rng(42)
+    color_bg_left = "#0B1F3A"
+    color_bg_right = "#0F2D52"
+    color_accent = "#D96F00"
+    color_accent_2 = "#F0A04E"
+    color_text_main = "#FFFFFF"
+    color_text_soft = "#A8C0DC"
+    color_grid = (1.0, 1.0, 1.0, 0.045)
 
-    bg_top = np.array([0x07, 0x14, 0x2A]) / 255
-    bg_mid = np.array([0x0F, 0x2D, 0x52]) / 255
-    bg_bot = np.array([0x07, 0x14, 0x2A]) / 255
-    bg = np.zeros((400, 1, 3))
-    for i in range(400):
-        t = i / 399
-        if t < 0.5:
-            c = bg_top + (bg_mid - bg_top) * (t / 0.5)
-        else:
-            c = bg_mid + (bg_bot - bg_mid) * ((t - 0.5) / 0.5)
-        bg[i, 0] = c
-    ax.imshow(bg, extent=(0, 16, 0, 9), aspect="auto", interpolation="bilinear", zorder=0)
+    bg = np.zeros((1, 800, 3))
+    c1 = np.array([0x0B, 0x1F, 0x3A]) / 255
+    c2 = np.array([0x12, 0x37, 0x65]) / 255
+    for i in range(800):
+        t = i / 799
+        bg[0, i] = c1 + (c2 - c1) * t
+    ax.imshow(bg, extent=(0, W, 0, H), aspect="auto", interpolation="bilinear", zorder=0)
 
-    grid_color = (0.20, 0.40, 0.65, 0.18)
-    for x in np.arange(0, 16.1, 0.8):
-        ax.axvline(x, color=grid_color, linewidth=0.5, zorder=1)
-    for y in np.arange(0, 9.1, 0.8):
-        ax.axhline(y, color=grid_color, linewidth=0.5, zorder=1)
+    rng = np.random.default_rng(7)
 
-    n_part = 80
-    part_x = rng.uniform(0, 16, n_part)
-    part_y = rng.uniform(0, 9, n_part)
-    part_s = rng.uniform(2, 14, n_part)
-    part_a = rng.uniform(0.1, 0.45, n_part)
-    for x, y, s, a in zip(part_x, part_y, part_s, part_a):
-        ax.scatter(x, y, s=s, color="#7BB7F0", alpha=a, zorder=2, edgecolor="none")
+    n_pts = 32
+    pts_x = rng.uniform(W * 0.55, W * 0.99, n_pts)
+    pts_y = rng.uniform(H * 0.05, H * 0.95, n_pts)
 
-    centros = [
-        ("DC-N",  3.4, 6.6, "#FF6B35"),
-        ("DC-W",  2.0, 3.2, "#37C7FF"),
-        ("DC-E",  9.4, 7.2, "#7CDB7E"),
-        ("DC-S",  7.6, 2.4, "#FFC857"),
-        ("DC-C", 12.5, 4.6, "#C58BF2"),
-    ]
+    for i in range(n_pts):
+        d = np.hypot(pts_x - pts_x[i], pts_y - pts_y[i])
+        idx = np.argsort(d)[1:4]
+        for j in idx:
+            ax.plot([pts_x[i], pts_x[j]], [pts_y[i], pts_y[j]],
+                    color=color_text_soft, alpha=0.18, linewidth=0.7, zorder=1)
+    ax.scatter(pts_x, pts_y, s=14, color="white", alpha=0.55, zorder=2, edgecolor="none")
+    ax.scatter(pts_x, pts_y, s=70, color="white", alpha=0.08, zorder=1, edgecolor="none")
 
-    n_clientes = 38
-    clientes_xy = []
-    for cx, cy, _ in [(c[1], c[2], c[3]) for c in centros]:
-        n_local = rng.integers(5, 10)
-        for _ in range(n_local):
-            r = rng.uniform(0.6, 2.4)
-            theta = rng.uniform(0, 2 * np.pi)
-            x = cx + r * np.cos(theta)
-            y = cy + r * np.sin(theta)
-            x = float(np.clip(x, 0.6, 15.4))
-            y = float(np.clip(y, 0.6, 8.4))
-            clientes_xy.append((x, y))
-    clientes_xy = clientes_xy[:n_clientes]
+    accent_pts = [(W * 0.62, H * 0.78), (W * 0.74, H * 0.50), (W * 0.86, H * 0.30)]
+    for (px, py) in accent_pts:
+        ax.scatter(px, py, s=420, color=color_accent, alpha=0.18, zorder=2, edgecolor="none")
+        ax.scatter(px, py, s=80, color=color_accent, alpha=1.0, zorder=3, edgecolor="white", linewidth=1.2)
+    for i in range(len(accent_pts) - 1):
+        x0, y0 = accent_pts[i]
+        x1, y1 = accent_pts[i + 1]
+        ax.plot([x0, x1], [y0, y1], color=color_accent, alpha=0.85, linewidth=1.8, zorder=3)
 
-    centro_indices = list(range(len(centros)))
-    cliente_a_centro = []
-    for cx, cy in clientes_xy:
-        dists = [(np.hypot(cx - c[1], cy - c[2]), i) for i, c in enumerate(centros)]
-        cliente_a_centro.append(min(dists)[1])
+    ax.add_patch(plt.Rectangle((0.0, 0.0), 0.18, H, facecolor=color_accent, edgecolor="none", zorder=4))
 
-    for (cx, cy), ci in zip(clientes_xy, cliente_a_centro):
-        nombre, dx, dy, color = centros[ci]
-        for halo_w, halo_a in [(3.5, 0.10), (2.0, 0.22)]:
-            ax.plot([dx, cx], [dy, cy], color=color, alpha=halo_a, linewidth=halo_w, zorder=3)
-        ax.plot([dx, cx], [dy, cy], color=color, alpha=0.9, linewidth=1.0, zorder=4)
+    ax.text(0.55, H - 0.55, "L E A N M A S T E R   P Y M E S",
+            fontsize=13, color=color_accent_2, fontweight="bold",
+            ha="left", va="top", zorder=10)
+    ax.text(0.55, H - 1.00, "Serie técnica  ·  Logística & Datos",
+            fontsize=11.5, color=color_text_soft, style="italic",
+            ha="left", va="top", zorder=10)
 
-    for cx, cy in clientes_xy:
-        ax.scatter(cx, cy, s=180, color="white", alpha=0.18, zorder=5, edgecolor="none")
-        ax.scatter(cx, cy, s=55,  color="white", alpha=0.95, zorder=6,
-                   edgecolor="#0F2D52", linewidth=0.8)
+    ax.plot([0.55, 5.0], [H - 1.45, H - 1.45], color=color_text_soft, alpha=0.35, linewidth=0.8, zorder=10)
 
-    for nombre, dx, dy, color in centros:
-        for halo_s, halo_a in [(1100, 0.10), (700, 0.18), (420, 0.30)]:
-            ax.scatter(dx, dy, s=halo_s, color=color, alpha=halo_a, zorder=7, edgecolor="none")
-        ax.scatter(dx, dy, s=260, color=color, marker="s", zorder=8,
-                   edgecolor="white", linewidth=2.4)
-        ax.text(dx, dy, nombre, ha="center", va="center", fontsize=8.5,
-                fontweight="bold", color="white", zorder=9)
+    ax.text(0.55, H - 2.15, "GESTIÓN DE RUTAS",
+            fontsize=46, color=color_text_main, fontweight="bold",
+            ha="left", va="top", family="DejaVu Sans", zorder=10)
+    ax.text(0.55, H - 3.55, "MULTI - SUCURSAL",
+            fontsize=46, color=color_text_main, fontweight="bold",
+            ha="left", va="top", family="DejaVu Sans", zorder=10)
 
-    def truck(ax, x, y, color, scale=0.45):
-        body_w, body_h = 1.2 * scale, 0.55 * scale
-        cab_w, cab_h = 0.55 * scale, 0.55 * scale
-        ax.add_patch(plt.Rectangle((x, y), body_w, body_h,
-                                   facecolor=color, edgecolor="white", linewidth=1.2, zorder=10))
-        ax.add_patch(plt.Rectangle((x + body_w, y + 0.05 * scale), cab_w, cab_h - 0.05 * scale,
-                                   facecolor="#0F2D52", edgecolor="white", linewidth=1.2, zorder=10))
-        ax.add_patch(plt.Rectangle((x + body_w + 0.06 * scale, y + 0.18 * scale),
-                                   cab_w - 0.16 * scale, cab_h - 0.30 * scale,
-                                   facecolor="#7BB7F0", edgecolor="none", zorder=11))
-        wheel_r = 0.10 * scale
-        for wx in [x + 0.18 * scale, x + body_w - 0.20 * scale, x + body_w + cab_w - 0.20 * scale]:
-            ax.add_patch(plt.Circle((wx, y - wheel_r * 0.4), wheel_r,
-                                    facecolor="#1A2233", edgecolor="white", linewidth=1.0, zorder=12))
+    ax.add_patch(plt.Rectangle((0.55, H - 4.05), 4.6, 0.06,
+                               facecolor=color_accent, edgecolor="none", zorder=10))
 
-    truck(ax, 5.2, 8.30, "#FF6B35", scale=0.55)
-    truck(ax, 0.4, 7.70, "#37C7FF", scale=0.55)
-    truck(ax, 13.6, 0.55, "#7CDB7E", scale=0.55)
+    ax.text(0.55, H - 4.55, "Machine Learning  ·  Programación dinámica",
+            fontsize=15, color=color_text_main, ha="left", va="top",
+            fontweight="600", zorder=10)
+    ax.text(0.55, H - 5.05, "Plan diario coordinado entre centros de distribución",
+            fontsize=15, color=color_text_main, ha="left", va="top",
+            fontweight="600", zorder=10)
 
-    ax.text(0.6, 1.95, "Gestión de rutas",
-            fontsize=42, fontweight="bold", color="white",
-            ha="left", va="bottom",
-            family="DejaVu Sans", zorder=13)
-    ax.text(0.6, 1.05, "multi-sucursal",
-            fontsize=42, fontweight="bold", color="#FFC857",
-            ha="left", va="bottom",
-            family="DejaVu Sans", zorder=13)
-    ax.text(0.65, 0.55, "Machine Learning   ·   Programación dinámica   ·   Open Source",
-            fontsize=12, color="#A8C8E8", ha="left", va="bottom",
-            family="DejaVu Sans", fontweight="600", zorder=13)
+    ax.text(0.55, 1.10, "Validado contra Google OR-Tools  ·  Open Source MIT  ·  Reproducible",
+            fontsize=11, color=color_text_soft, ha="left", va="bottom",
+            zorder=10)
 
-    ax.text(15.4, 8.55, "L E A N M A S T E R   P Y M E S",
-            fontsize=11, color="#FFC857", fontweight="bold",
-            ha="right", va="top", zorder=13)
-    ax.text(15.4, 8.10, "Caso técnico",
-            fontsize=10, color="#A8C8E8",
-            ha="right", va="top", style="italic", zorder=13)
+    ax.text(0.55, 0.55, "Manuel Antonio Pérez Ogando",
+            fontsize=11.5, color="white", fontweight="bold",
+            ha="left", va="bottom", zorder=10)
+    ax.text(6.5, 0.55, "·  Ingeniero industrial  ·  MSc en Gestión Estratégica para el Desarrollo de Software",
+            fontsize=10.5, color=color_text_soft, ha="left", va="bottom", zorder=10)
 
-    fig.savefig(ruta, bbox_inches="tight", facecolor="#07142A", pad_inches=0)
+    fig.savefig(ruta, bbox_inches="tight", facecolor=color_bg_left, pad_inches=0)
     plt.close(fig)
     return ruta
 
@@ -686,7 +653,7 @@ def metric_grid_kpi() -> Path:
 def pull_quote_held_karp() -> Path:
     """Pull-quote de la sección 4 (programación dinámica)."""
     ruta = _ruta("callouts", "pull_quote_held_karp.png")
-    fig, ax = plt.subplots(figsize=(11, 3.4), dpi=DPI)
+    fig, ax = plt.subplots(figsize=(13, 3.8), dpi=DPI)
     fig.patch.set_facecolor("white")
     ax.set_facecolor("white")
     ax.set_xlim(0, 1)
@@ -694,23 +661,27 @@ def pull_quote_held_karp() -> Path:
     ax.axis("off")
 
     ax.add_patch(plt.Rectangle((0.0, 0.0), 1.0, 1.0, facecolor="#FDF3E6", edgecolor="none"))
-    ax.add_patch(plt.Rectangle((0.0, 0.0), 0.012, 1.0, facecolor="#D96F00", edgecolor="none"))
+    ax.add_patch(plt.Rectangle((0.0, 0.0), 0.010, 1.0, facecolor="#D96F00", edgecolor="none"))
 
-    ax.text(0.04, 0.92, "“", fontsize=64, color="#D96F00",
+    ax.text(0.035, 0.94, "“", fontsize=58, color="#D96F00",
             fontweight="bold", va="top", ha="left")
 
     cita = (
-        "¿Cuál es el camino más corto para visitar este conjunto de\n"
-        "clientes y volver al centro de distribución?"
+        "¿Cuál es el camino más corto para visitar\n"
+        "este conjunto de clientes y volver al centro\n"
+        "de distribución?"
     )
-    explicacion = "La programación dinámica responde esa pregunta sin probar todas las combinaciones posibles."
+    explicacion_l1 = "La programación dinámica responde esa pregunta"
+    explicacion_l2 = "sin probar todas las combinaciones posibles."
 
-    ax.text(0.10, 0.72, cita, fontsize=15, fontstyle="italic",
-            color="#1A2233", va="top", ha="left", linespacing=1.5)
-    ax.text(0.10, 0.28, explicacion, fontsize=12, color="#2D3748",
-            va="top", ha="left", linespacing=1.4)
+    ax.text(0.085, 0.78, cita, fontsize=14, fontstyle="italic",
+            color="#1A2233", va="top", ha="left", linespacing=1.45)
+    ax.text(0.085, 0.24, explicacion_l1, fontsize=11.5, color="#2D3748",
+            va="top", ha="left")
+    ax.text(0.085, 0.15, explicacion_l2, fontsize=11.5, color="#2D3748",
+            va="top", ha="left")
 
-    fig.savefig(ruta, bbox_inches="tight", facecolor="white")
+    fig.savefig(ruta, bbox_inches="tight", facecolor="white", pad_inches=0.15)
     plt.close(fig)
     return ruta
 

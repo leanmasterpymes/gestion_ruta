@@ -24,10 +24,11 @@ from docx import Document
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
-from docx.shared import Pt, RGBColor, Cm
+from docx.shared import Pt, RGBColor, Cm, Inches
 
 
-DOCX_PATH = Path(__file__).resolve().parents[1] / "docs" / "articulo_linkedin.docx"
+REPO_ROOT = Path(__file__).resolve().parents[1]
+DOCX_PATH = REPO_ROOT / "docs" / "articulo_linkedin.docx"
 
 COLOR_PRIMARIO = RGBColor(0x1A, 0x43, 0x73)
 COLOR_PRIMARIO_OSCURO = RGBColor(0x0F, 0x2D, 0x52)
@@ -69,6 +70,11 @@ def _add_horizontal_line(doc: Document) -> None:
 def aviso(tipo: str, archivo: str, alt: str, numero: int | None = None) -> str:
     prefijo = f"[INSERTAR IMAGEN {numero:02d}" if numero is not None else "[INSERTAR AQUÍ"
     return f"{prefijo} — TIPO: {tipo} · ARCHIVO: {archivo} · ALT: {alt}]"
+
+
+def add_aviso_con_imagen(doc: Document, tipo: str, archivo: str, alt: str, numero: int | None = None) -> None:
+    """Añade el aviso textual y embebe la imagen real debajo (preview en el DOCX)."""
+    add_aviso(doc, aviso(tipo, archivo, alt, numero=numero), archivo=archivo)
 
 
 def add_titulo_principal(doc: Document, texto: str) -> None:
@@ -170,7 +176,7 @@ def add_pull_quote(doc: Document, texto: str) -> None:
     p.paragraph_format.left_indent = Cm(0.6)
 
 
-def add_aviso(doc: Document, texto_aviso: str) -> None:
+def add_aviso(doc: Document, texto_aviso: str, archivo: str | None = None) -> None:
     p = doc.add_paragraph()
     p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
     _set_paragraph_shading(p, "FFF4E5")
@@ -179,7 +185,16 @@ def add_aviso(doc: Document, texto_aviso: str) -> None:
     run.font.size = Pt(10)
     run.font.color.rgb = COLOR_AVISO
     p.paragraph_format.space_before = Pt(10)
-    p.paragraph_format.space_after = Pt(10)
+    p.paragraph_format.space_after = Pt(6)
+
+    if archivo:
+        ruta = REPO_ROOT / archivo
+        if ruta.exists():
+            p_img = doc.add_paragraph()
+            p_img.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+            run_img = p_img.add_run()
+            run_img.add_picture(str(ruta), width=Inches(6.2))
+            p_img.paragraph_format.space_after = Pt(10)
 
 
 def add_indice(doc: Document, secciones: list[tuple[str, str]]) -> None:
@@ -296,12 +311,13 @@ def construir() -> Document:
         s.right_margin = Cm(2.4)
 
     # ── Portada ─────────────────────────────────────────────────────────
-    add_aviso(doc, aviso(
+    add_aviso_con_imagen(
+        doc,
         "imagen de portada",
         "figuras/imagenes/00_hero_portada.png",
         "Portada del artículo: red tecnológica con cinco centros de distribución conectados a clientes en distintos colores, tres camiones y branding Leanmaster Pymes sobre fondo azul oscuro con grilla y partículas. Sube esta imagen como portada del Article de LinkedIn.",
         numero=1,
-    ))
+    )
     add_titulo_principal(
         doc,
         "Gestión de rutas multi-sucursal con Machine Learning y programación dinámica",
@@ -359,12 +375,13 @@ def construir() -> Document:
         "github.com/leanmasterpymes/gestion_rutas, que aborda el problema desde la predicción de demanda "
         "hasta el plan diario coordinado entre los centros de distribución.",
     )
-    add_aviso(doc, aviso(
+    add_aviso_con_imagen(
+        doc,
         "callout",
         "figuras/callouts/callout_repo_github.png",
         "Caja CTA destacando el sistema de código abierto disponible en GitHub: github.com/leanmasterpymes/gestion_rutas, que aborda el problema desde la predicción de demanda hasta el plan diario coordinado.",
         numero=2,
-    ))
+    )
 
     # ── Sección 2 ───────────────────────────────────────────────────────
     add_section_heading(doc, "2", "La arquitectura propuesta")
@@ -376,12 +393,13 @@ def construir() -> Document:
         "de cada uno). Conocer la disponibilidad antes de asignar es lo que permite respetar la "
         "capacidad real de despacho de cada centro y evitar la sobrecarga.",
     )
-    add_aviso(doc, aviso(
+    add_aviso_con_imagen(
+        doc,
         "diagrama",
         "figuras/diagramas/01_arquitectura_sistema.png",
         "Pipeline del sistema con dos inputs (histórico de pedidos y disponibilidad por centro) que alimentan la predicción de demanda, el clustering de clientes, la programación dinámica, el plan de rutas coordinado y el dashboard.",
         numero=3,
-    ))
+    )
     add_lista(doc, [
         "Predicción de demanda por cliente: un modelo aprende los patrones de pedido de cada cliente y proyecta cuánto pedirá mañana, capturando estacionalidad semanal, tendencia mensual y comportamiento individual.",
         "Clustering inteligente de clientes: los clientes se agrupan en zonas de ruteo balanceadas por la capacidad real del camión, no por divisiones administrativas heredadas.",
@@ -428,18 +446,20 @@ def construir() -> Document:
         "recibir alrededor de 870 unidades en pedidos para mañana, el modelo se equivoca en promedio un "
         "10%, suficiente para dimensionar correctamente cuántos camiones cargar.",
     )
-    add_aviso(doc, aviso(
+    add_aviso_con_imagen(
+        doc,
         "callout",
         "figuras/callouts/metric_grid_kpi.png",
         "Cuadrícula de cuatro métricas del modelo de demanda: 10.1% de error en la demanda total esperada por día, 11.3 unidades de error promedio por cliente y día, 540 días de histórico y 50 clientes en el caso de estudio.",
         numero=4,
-    ))
-    add_aviso(doc, aviso(
+    )
+    add_aviso_con_imagen(
+        doc,
         "imagen",
         "figuras/imagenes/02_mapa_clientes_clusters.png",
         "Mapa de los 50 clientes coloreados por centro de distribución asignado, con los 5 centros marcados como cuadrados.",
         numero=5,
-    ))
+    )
 
     # ── Sección 4 ───────────────────────────────────────────────────────
     add_section_heading(doc, "4", "Cómo se optimiza la ruta")
@@ -450,12 +470,13 @@ def construir() -> Document:
         "resolver cada pieza una sola vez y reutilizar el resultado. La técnica se llama programación "
         "dinámica, y el algoritmo clásico que la materializa para el ruteo es Held-Karp (1962).",
     )
-    add_aviso(doc, aviso(
+    add_aviso_con_imagen(
+        doc,
         "callout",
         "figuras/callouts/pull_quote_held_karp.png",
         "Cita destacada: ¿Cuál es el camino más corto para visitar este conjunto de clientes y volver al centro de distribución? La programación dinámica responde esa pregunta sin probar todas las combinaciones posibles.",
         numero=6,
-    ))
+    )
     add_p(
         doc,
         "El método tiene un límite práctico: cuando una ruta crece de 15 clientes en adelante, el "
@@ -489,12 +510,13 @@ def construir() -> Document:
         "resuelve este planteo en milisegundos y elimina los solapamientos sin necesidad de redibujar "
         "zonas a mano.",
     )
-    add_aviso(doc, aviso(
+    add_aviso_con_imagen(
+        doc,
         "imagen",
         "figuras/imagenes/03_plan_rutas_resuelto.png",
         "Mapa con las rutas finales resueltas, líneas coloreadas saliendo de cada centro de distribución hacia sus clientes en secuencia óptima.",
         numero=7,
-    ))
+    )
 
     # ── Sección 6 ───────────────────────────────────────────────────────
     add_section_heading(doc, "6", "Validación contra el estándar industrial")
@@ -503,18 +525,20 @@ def construir() -> Document:
         "Para validar la calidad del sistema, el motor propio se compara lado a lado con Google "
         "OR-Tools, el estándar industrial de problemas de ruteo. Sobre el mismo caso de estudio:",
     )
-    add_aviso(doc, aviso(
+    add_aviso_con_imagen(
+        doc,
         "tabla",
         "figuras/tablas/04_benchmark_ortools.png",
         "Tabla comparativa: ruta única 12 clientes, diferencia 0%, sistema propio 50× más rápido. Plan completo 50 clientes, diferencia +15.7% bajo restricción real de centros múltiples.",
         numero=8,
-    ))
-    add_aviso(doc, aviso(
+    )
+    add_aviso_con_imagen(
+        doc,
         "callout",
         "figuras/callouts/callout_info_benchmark.png",
         "Lectura del benchmark: en el caso pequeño el sistema propio iguala al estándar industrial 50 veces más rápido. En el caso grande OR-Tools logra menos kilómetros porque consolida la flota en un depósito ficticio, esquema irrealizable en la operación real. Bajo la misma restricción operativa el motor propio queda dentro de un margen razonable del óptimo.",
         numero=9,
-    ))
+    )
 
     # ── Sección 7 ───────────────────────────────────────────────────────
     add_section_heading(doc, "7", "Cinco beneficios operativos medibles")
@@ -560,12 +584,13 @@ def construir() -> Document:
         "entre 30 y 50% más que un camión propio. Si hoy 10% de las rutas se cubren con flash y se "
         "baja a 4 o 5%, ese es ahorro puro al cierre del mes, mes tras mes.",
     )
-    add_aviso(doc, aviso(
+    add_aviso_con_imagen(
+        doc,
         "imagen",
         "figuras/imagenes/05_antes_despues.png",
         "Comparativa antes y después en tres barras: kilometraje total, número de rutas y costo estimado.",
         numero=10,
-    ))
+    )
 
     # ── Sección 8 ───────────────────────────────────────────────────────
     add_section_heading(doc, "8", "Cómo probar el sistema")
