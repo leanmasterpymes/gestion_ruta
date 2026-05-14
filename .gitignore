@@ -39,6 +39,9 @@ ENV/
 *.swo
 .DS_Store
 
+# Figuras pendientes que no se publican todavia
+figuras/imagenes/06_bio_autor.png
+
 # Streamlit
 .streamlit/secrets.toml
 
